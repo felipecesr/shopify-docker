@@ -1,0 +1,534 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Label",
+    "theme_author": "Switch",
+    "theme_version": "2.5.0",
+    "theme_documentation_url": "http:\/\/support.switchthemes.co",
+    "theme_support_email": "support@switchthemes.co"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "General"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary",
+        "default": "#dcdcdc"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Links and accents",
+        "default": "#dcdcdc"
+      },
+      {
+        "type": "color",
+        "id": "color_body_bg",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_title",
+        "label": "Titles ",
+        "default": "#dcdcdc"
+      },
+      {
+        "type": "color",
+        "id": "color_subheader",
+        "label": "Subheader",
+        "default": "#dcdcdc"
+      },
+      {
+        "type": "header",
+        "content": "Header"
+      },
+      {
+        "type": "color",
+        "id": "color_header_text",
+        "label": "Text",
+        "default": "#000",
+        "info": "If hero image is enabled, you can override homepage color in the Header section"
+      },
+      {
+        "type": "color",
+        "id": "color_header_border",
+        "label": "Bottom border",
+        "default": "#000"
+      },
+      {
+        "type": "header",
+        "content": "Buttons"
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style:",
+        "options": [
+          {
+            "value": "full_square",
+            "label": "Square, full color"
+          },
+          {
+            "value": "border_square",
+            "label": "Square, border only"
+          },
+          {
+            "value": "full_rounded",
+            "label": "Rounded, full color"
+          },
+          {
+            "value": "border_rounded",
+            "label": "Rounded, border only"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "color_button",
+        "label": "Background \/ border",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_button_hover",
+        "label": "Background \/ border hover",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text_hover",
+        "label": "Text hover ",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Image with text overlay"
+      },
+      {
+        "type": "color",
+        "id": "color_feature_image_overlay",
+        "label": "Text Color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "select",
+        "id": "button_style_feature",
+        "label": "Button color:",
+        "info": "Override button color for image with text overlays and collection lists.",
+        "options": [
+          {
+            "value": "default",
+            "label": "Default"
+          },
+          {
+            "value": "white",
+            "label": "White"
+          },
+          {
+            "value": "black",
+            "label": "Black"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Footer"
+      },
+      {
+        "type": "color",
+        "id": "color_footer_bg",
+        "label": "Footer background",
+        "default": "#f2f2f2"
+      },
+      {
+        "type": "color",
+        "id": "color_footer_text",
+        "label": "Footer text",
+        "default": "#636363"
+      },
+      {
+        "type": "color",
+        "id": "color_footer_secondary",
+        "label": "Footer secondary",
+        "default": "#636363"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Fonts"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Heading",
+        "default": "montserrat_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body",
+        "default": "karla_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_secondary_font",
+        "label": "Secondary",
+        "default": "montserrat_n7"
+      },
+      {
+        "type": "header",
+        "content": "Text Overlay"
+      },
+      {
+        "type": "checkbox",
+        "id": "headings_capitalize",
+        "label": "Capitalize"
+      },
+      {
+        "type": "range",
+        "id": "headings_letterspacing",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Letterspacing",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Header navigation"
+      },
+      {
+        "type": "select",
+        "id": "navigation_font",
+        "label": "Font",
+        "options": [
+          {
+            "value": "title_font",
+            "label": "Title Font"
+          },
+          {
+            "value": "body_font",
+            "label": "Body Font"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "navigation_capitalize",
+        "label": "Capitalize"
+      },
+      {
+        "type": "range",
+        "id": "navigation_letterspacing",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Letterspacing",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Headings"
+      },
+      {
+        "type": "checkbox",
+        "id": "standard_title_capitalize",
+        "label": "Capitalize"
+      },
+      {
+        "type": "range",
+        "id": "standard_title_letterspacing",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Letterspacing",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Product grid titles"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_grid_capitalize",
+        "label": "Capitalize"
+      },
+      {
+        "type": "range",
+        "id": "product_grid_letterspacing",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Letterspacing",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "product_grid_font_weight",
+        "label": "Font weight",
+        "options": [
+          {
+            "value": "-200",
+            "label": "-200"
+          },
+          {
+            "value": "-100",
+            "label": "-100"
+          },
+          {
+            "value": "inherit",
+            "label": "Default"
+          },
+          {
+            "value": "+100",
+            "label": "+100"
+          },
+          {
+            "value": "+200",
+            "label": "+200"
+          }
+        ],
+        "default": "inherit",
+        "info": "Will modify font weight if it's available."
+      },
+      {
+        "type": "select",
+        "id": "product_grid_align",
+        "label": "Align",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Section headings"
+      },
+      {
+        "type": "checkbox",
+        "id": "section_title_capitalize",
+        "label": "Capitalize"
+      },
+      {
+        "type": "range",
+        "id": "section_title_letterspacing",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Letterspacing",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "section_title_align",
+        "label": "Align",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Secondary"
+      },
+      {
+        "type": "checkbox",
+        "id": "secondary_title_capitalize",
+        "label": "Capitalize"
+      },
+      {
+        "type": "range",
+        "id": "secondary_letterspacing",
+        "min": 0,
+        "max": 5,
+        "step": 1,
+        "label": "Letterspacing",
+        "default": 0
+      }
+    ]
+  },
+  {
+    "name": "Products",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "products_show_second_image_on_hover",
+        "label": "Show second image on hover",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Favicon"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "16 x 16px png"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "ajax_cart_enable",
+        "label": "Stay on the current page when an item is added to the cart"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_notes_enable",
+        "label": "Enable order notes"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_vendor_enable",
+        "label": "Show product vendor"
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Accounts"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_url",
+        "label": "Facebook",
+        "info": "https:\/\/www.facebook.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_url",
+        "label": "Instagram",
+        "info": "https:\/\/www.instagram.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_url",
+        "label": "Twitter",
+        "info": "https:\/\/www.twitter.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_patreon_url",
+        "label": "Patreon",
+        "info": "https:\/\/www.patreon.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_url",
+        "label": "Pinterest",
+        "info": "https:\/\/www.pinterest.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_soundcloud_url",
+        "label": "Soundcloud",
+        "info": "https:\/\/www.soundcloud.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_spotify_url",
+        "label": "Spotify",
+        "info": "https:\/\/open.spotify.com\/artist\/3WrFJ7ztbogyGnTHbHJFl2"
+      },
+      {
+        "type": "text",
+        "id": "social_bandcamp_url",
+        "label": "Bandcamp",
+        "info": "https:\/\/artistname.bandcamp.com"
+      },
+      {
+        "type": "text",
+        "id": "social_flickr_url",
+        "label": "Flickr",
+        "info": "https:\/\/www.flickr.com\/photos\/shopify\/"
+      },
+      {
+        "type": "text",
+        "id": "social_vimeo_url",
+        "label": "Vimeo",
+        "info": "https:\/\/www.vimeo.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_apple_url",
+        "label": "Apple",
+        "info": "https:\/\/geo.itunes.apple.com\/us\/album\/abbey-road\/id401186200?mt=1&app=music"
+      },
+      {
+        "type": "text",
+        "id": "social_lastfm_url",
+        "label": "Last FM",
+        "info": "http:\/\/www.last.fm\/music\/Shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_url",
+        "label": "YouTube",
+        "info": "https:\/\/www.youtube.com\/user\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_tumblr_url",
+        "label": "Tumblr",
+        "info": "http:\/\/shopify.tumblr.com\/"
+      },
+      {
+        "type": "text",
+        "id": "social_triplej_url",
+        "label": "Triple J",
+        "info": "https:\/\/www.triplejunearthed.com\/artist\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_mixcloud_url",
+        "label": "Mixcloud",
+        "info": "https:\/\/www.mixcloud.com\/shopify\/"
+      }
+    ]
+  }
+]

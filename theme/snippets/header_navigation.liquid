@@ -1,0 +1,20 @@
+<!-- /snippets/header_navigation.liquid -->
+<!-- begin site-nav -->
+<ul class="site-nav" id="AccessibleNav">
+  {% for link in linklists[section.settings.main_linklist].links %}
+    {% if link.links != blank %}
+      <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" data-list="{{ link.handle }}" aria-haspopup="true">
+        <a tabindex="0" class="site-nav__link">
+          {{ link.title }}
+          {% include 'icon-expand_more' %}
+          {% include 'icon-expand_less' %}
+        </a>
+      </li>
+    {% else %}
+      <li {% if link.active %}class="site-nav--active"{% endif %}>
+        <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+<!-- //site-nav -->

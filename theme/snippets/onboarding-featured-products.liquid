@@ -1,0 +1,26 @@
+{% unless limit %}
+  {% assign limit = 4 %}
+{% endunless %}
+<!-- snippets/onboarding-featured-products.liquid -->
+<div class="grid__item">
+  <div class="helper-section">
+
+    <div class="grid-uniform helper-content product-grid">
+      {% for i in (1..limit) %}
+        <div class="grid__item large--one-quarter medium--one-half">
+
+          <div class="grid__image">
+            {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+            {%- assign placeholder = 'product-' | append: current -%}
+            {{ placeholder | placeholder_svg_tag }}
+          </div>
+
+          <p class="h6">
+            <span class="product-grid-title">{{ 'homepage.onboarding.product_title' | t }}</span>
+          </p>
+          <p class="price">$19.99</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

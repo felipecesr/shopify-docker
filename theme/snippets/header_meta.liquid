@@ -1,0 +1,23 @@
+<!-- /snippets/header_meta.liquid -->
+{% if section.settings.enable_social_icons_header %}
+{% include 'social', social_location: 'header' %}
+{% endif %}
+<div class="cart-user-box {% if shop.customer_accounts_enabled %}accounts-on{% endif %}">
+  {% if shop.customer_accounts_enabled %}
+  <a data-list="customer" href="{{ routes.root_url }}" class="account-link site-nav--has-dropdown medium-down--hide">
+    {% include 'icon-person' %}
+  </a>
+  {% endif %}
+
+  {% if section.settings.header_show_search_icon %}
+  <a data-list="search" href="{{ routes.root_url }}" class="search-link site-nav--has-dropdown medium-down--hide">
+    {% include 'icon-search' %}
+  </a>
+  {% endif %}
+
+  <a href="{{ routes.cart_url }}" class="site-header__cart-toggle" aria-controls="CartDrawer" aria-expanded="false" >
+    <span id="CartCount">{{ cart.item_count }}</span>
+    {% include 'icon-cart' %}
+  </a>
+
+</div>

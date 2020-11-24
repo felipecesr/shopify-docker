@@ -1,0 +1,288 @@
+<!-- sections/gallery.liquid -->
+{% if section.settings.full_bleed %}
+  {% assign full_bleed = true %}
+{% else %}
+  {% assign full_bleed = false %}
+{% endif %}
+
+{% case section.blocks.size %}
+  {% when 1 %}
+    {% assign grid_item_size_class = 'one-whole large--one-whole medium--one-whole' %}
+  {% when 2 %}
+    {% assign grid_item_size_class = 'one-half large--one-half medium--one-half' %}
+  {% when 3 %}
+    {% assign grid_item_size_class = 'one-whole large--one-third medium--one-third' %}
+  {% when 4  %}
+    {% assign grid_item_size_class = 'one-half large--one-quarter medium--one-quarter' %}
+  {% when 5 %}
+    {% assign grid_item_size_class = 'one-whole xlarge--one-fifth large--one-fifth medium--one-fifth' %}
+  {% when 6 %}
+    {% assign grid_item_size_class = 'one-half xlarge--one-sixth large--one-sixth medium--one-sixth' %}
+  {% when 7 %}
+    {% assign grid_item_size_class = 'one-whole xlarge--one-seventh large--one-seventh medium--one-quarter' %}
+  {% when 8 %}
+    {% assign grid_item_size_class = 'one-half xlarge--one-eighth large--one-quarter medium--one-quarter' %}
+{% endcase %}
+
+<section class="gallery{% if section.settings.full_bleed and section.settings.heading != blank %} gallery--flush-bottom{% elsif section.settings.full_bleed and section.settings.heading == blank %} gallery--flush{% endif %}"
+  data-section-type="gallery"
+  data-section-id="{{ section.id }}">
+  {% unless section.settings.heading == blank %}
+    <h2 class="section_title">
+      {{ section.settings.heading }}
+      <div class="border"></div>
+    </h2>
+  {% endunless %}
+  <div class="{% unless full_bleed %}wrapper{% endunless %}">
+    <div class="grid-uniform {% if full_bleed %}grid--full{% endif %}">
+      {% for block in section.blocks %}
+      <div class="grid__item {{ grid_item_size_class }} gallery-item" {{ shopify.block_attributes }}>
+        {% if block.settings.url != blank %}
+        <a href="{{ block.settings.url }}">
+        {% endif %}
+        {%- if block.settings.image != blank -%}
+        {%- assign image = block.settings.image -%}
+          {%- if section.settings.crop == 'none' -%}
+            {%- assign img_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <div class="gallery-image resp-img-wrapper js">
+              <div style="padding-top:{{ 1 | divided_by: image.aspect_ratio | times: 100 }}%;">
+                <img id="{{ img_id }}"
+                  class="resp-img gallery-image__img-content lazyload"
+                  src="{{ block.settings.image | img_url: '300x' }}"
+                  srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                  data-src="{{ img_url }}"
+                  data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048, 4472]"
+                  data-aspectratio="{{ feature_image.aspect_ratio }}"
+                  data-sizes="auto">
+                {% if block.settings.caption != blank and full_bleed %}
+                <div class="gallery-image__inner">
+                  {% include 'gallery__image__inner', caption: block.settings.caption %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          {%- else -%}
+            {%- case section.settings.crop -%}
+              {% when 'landscape' %}
+                {%- assign ratio = '1.3' -%}
+              {% when 'square' %}
+                {%- assign ratio = '1' -%}
+              {% when 'portrait' %}
+                {%- assign ratio = '0.8' -%}
+            {%- endcase -%}
+            <div class="gallery-image-cropped gallery-image-cropped--align-{{ block.settings.alignment }}"
+              style="padding-top:{{ 1 | divided_by: ratio | times: 100}}%;">
+              <div
+                class="lazyload gallery-image-cropped__inner"
+                data-bgset="{% include 'bgset', image: image %}"
+                data-sizes="auto"
+                data-parent-fit="cover"
+                style="background-image: url('{{ image | img_url: '300x300' }});">
+                {% if block.settings.caption != blank and full_bleed %}
+                  {% include 'gallery__image__inner', caption: block.settings.caption %}
+                {% endif %}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- else -%}
+        {% comment %}
+        Placeholders
+        {% endcomment %}
+        <div class="gallery-placeholder-container">
+        {%- if section.settings.crop == 'none' -%}
+          <div class="gallery-placeholder">
+            {%- if full_bleed -%}
+              {% assign placeholder_svg_tag = 'placeholder-svg placeholder-svg--no-border' %}
+            {%- else -%}
+              {% assign placeholder_svg_tag = 'placeholder-svg' %}
+            {%- endif -%}
+            {{ 'image' | placeholder_svg_tag: placeholder_svg_tag }}
+          </div>
+        {%- else -%}
+          {%- case section.settings.crop -%}
+            {% when 'landscape' %}
+              {%- assign ratio = '1.3' -%}
+            {% when 'square' %}
+              {%- assign ratio = '1' -%}
+            {% when 'portrait' %}
+              {%- assign ratio = '0.8' -%}
+          {%- endcase -%}
+
+          <div class="gallery-placeholder--cropped"
+            style="padding-top:{{ 1 | divided_by: ratio | times: 100}}%;" >
+            {%- if full_bleed -%}
+              {% assign placeholder_svg_tag = 'placeholder-svg gallery-placeholder--cropped__svg placeholder-svg--no-border' %}
+            {%- else -%}
+              {% assign placeholder_svg_tag = 'placeholder-svg gallery-placeholder--cropped__svg' %}
+            {%- endif -%}
+            {{ 'image' | placeholder_svg_tag: placeholder_svg_tag }}
+          </div>
+
+        {%- endif -%}
+        <div class="gallery-placeholder__inner">
+          {% if block.settings.caption != blank and full_bleed %}
+            {% include 'gallery__image__inner', caption: block.settings.caption %}
+          {% endif %}
+        </div>
+        </div>
+        {%- endif -%}
+        {%- if block.settings.url != blank -%}
+        </a>
+        {%- endif -%}
+        {%- if block.settings.caption != blank and full_bleed == false -%}
+        <div class="gallery-caption-text">
+          {{ block.settings.caption }}
+        </div>
+        {%- endif -%}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</section>
+{% schema %}
+{
+  "name": "Gallery",
+  "class": "section-gallery",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading",
+      "default": "Gallery"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_bleed",
+      "label": "Full bleed",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "crop",
+      "label": "Crop images",
+        "label": "Crop",
+        "options": [
+          {
+            "value": "none",
+            "label": "No crop"
+          },
+          {
+            "value": "landscape",
+            "label": "Landscape"
+          },
+          {
+            "value": "square",
+            "label": "Square"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait"
+          }
+        ],
+        "default": "square"
+      }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+            "label": "Image alignment",
+            "info": "Only applies if cropping is enabled",
+            "options": [
+              {
+                "value": "top-left",
+                "label": "Top Left"
+              },
+              {
+                "value": "top-center",
+                "label": "Top Center"
+              },
+              {
+                "value": "top-right",
+                "label": "Top Right"
+              },
+              {
+                "value": "center-left",
+                "label": "Middle Left"
+              },
+              {
+                "value": "center-center",
+                "label": "Middle Center"
+              },
+              {
+                "value": "center-right",
+                "label": "Middle Right"
+              },
+              {
+                "value": "bottom-left",
+                "label": "Bottom Left"
+              },
+              {
+                "value": "bottom-center",
+                "label": "Bottom Center"
+              },
+              {
+                "value": "bottom-right",
+                "label": "Bottom Right"
+              }
+            ],
+            "default": "center-center"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption (optional)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gallery",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

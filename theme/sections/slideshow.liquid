@@ -1,0 +1,212 @@
+{% comment %}
+Script to see if first section to hide header border
+{% endcomment %}
+
+<section class="slideshow" data-slide-speed="{{ section.settings.slide_speed }}" {% if section.settings.auto_rotate %}data-auto-rotate="true"{% endif %}  data-section-type="slideshow" data-section-id="{{ section.id }}">
+
+{% assign style = section.settings.slideshow_style %}
+
+{% for block in section.blocks %}
+
+    {% assign if_image = block.settings.feature_image %}
+    {% if block.settings.feature_image %}
+      {% assign feature_image = block.settings.feature_image %}
+    {% endif %}
+
+    {% assign cta_text = block.settings.feature_image_cta_text | escape %}
+    {% assign cta_url = block.settings.feature_image_cta_url %}
+    {% assign feature_copy =  block.settings.feature_image_copy | escape %}
+    {% assign feature_text =  block.settings.feature_image_text %}
+    {% assign width =  block.settings.feature_image_width_select %}
+    {% capture block_class %}block-{{ block.id }}{% endcapture %}
+
+    <div class="feature-image {{ feature_image }} {{ block_class }} relative feature-image--{% if style == 'full_screen' %}full_screen{% else %}content{% endif %}" {{ block.shopify_attributes }}>
+
+        {% if style == 'fit_content' and if_image %}
+          {% capture img_id %}FeatureImage-{{ feature_image.id }}{% endcapture %}
+          {% capture wrapper_id %}FeatureImageWrapper-{{ feature_image.id }}{% endcapture %}
+          {%- assign img_url = feature_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
+            <div style="padding-top:{{ 1 | divided_by: feature_image.aspect_ratio | times: 100}}%;">
+              <img id="{{ img_id }}"
+                   class="resp-img feature-image__img-content lazyload"
+                   src="{{ feature_image | img_url: '300x' }}"
+                   data-src="{{ img_url }}"
+                   data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048, 4472]"
+                   data-aspectratio="{{ feature_image.aspect_ratio }}"
+                   data-sizes="auto"
+                   alt="{{ feature_image.alt | escape }}">
+            </div>
+          </div>
+          <noscript>
+            <img src="{{ feature_image.src | img_url: 'large' }}" alt="{{ feature_image.alt | escape }}" class="feature-image__img-content">
+          </noscript>
+        {% endif %}
+
+       <div class="feature-image-inner lazyload"
+           {%- if style == 'full_screen' and block.settings.feature_image -%}
+           data-bgset="{% include 'bgset', image: feature_image %}"
+           data-sizes="auto"
+           data-parent-fit="cover"
+           style="background-image: url('{{ feature_image | img_url: '300x300' }}); background-position: center center;"
+           {%- endif -%}>
+
+        {% if cta_url != blank or feature_copy != '' %}
+        <div class="content-wrapper {% if width == 'full_width' %}wrapper{% endif %}">
+          <div class="grid--full grid--table">
+            <div class="grid__item">
+
+              {% if feature_copy != '' %}
+              <div class="feature_copy-holder  {% if cta_url != '' %}with-cta{% endif %}">
+              <h3 class="feature-image-overlay {% unless block.settings.feature_image_border %}no-border{% endunless %}">{{ feature_copy }}</h3>
+                {% if feature_text != '' %}
+                <div class="feature-image-text feature-copy">
+                  {{ feature_text }}
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+            {% if cta_url != blank %}
+            <a href="{{ cta_url }}" class="feature-image-cta btn">{{ cta_text }}  <span class="next-arrow">{% include 'icon-forward' %}</span></a>
+            {% endif %}
+
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+      </div>
+
+
+      {% unless if_image %}
+      <div class="feature-image__placeholder {% if style == 'fit_content' %}feature-image__placeholder--fit{% endif %}">{{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+      {% endunless %}
+
+    </div>
+
+{% endfor %}
+
+
+</section>
+
+<div class="arrows--{{ section.id }} hide">
+  <span class="slick--left-svg">{% include 'icon-keyboard_arrow_left' %}</span>
+  <span class="slick--next-svg">{% include 'icon-keyboard_arrow_right' %}</span>
+</div>
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "class": "section-slideshow",
+  "settings": [
+    {
+      "type": "select",
+      "id": "slideshow_style",
+      "label": "Slideshow style:",
+      "options": [
+        {
+          "value": "full_screen",
+          "label": "Full Screen"
+        },
+        {
+          "value": "fit_content",
+          "label": "Content"
+        }
+      ],
+      "info": "Use \'Content\' style if you want to avoid image cropping."
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto-rotate slides"
+    },
+    {
+      "type": "select",
+      "id": "slide_speed",
+      "label": "Change slides every",
+      "options": [
+        {
+          "value": "5000",
+          "label": "5 Seconds"
+        },
+        {
+          "value": "6000",
+          "label": "6 Seconds"
+        },
+        {
+          "value": "7000",
+          "label": "7 Seconds"
+        },
+        {
+          "value": "8000",
+          "label": "8 Seconds"
+        },
+        {
+          "value": "9000",
+          "label": "9 Seconds"
+        },
+        {
+          "value": "10000",
+          "label": "10 Seconds"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "feature_image_copy",
+          "label": "Heading",
+          "default": "Slideshow"
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_image_border",
+          "label": "Show border",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "feature_image_text",
+          "label": "Subheading"
+        },
+        {
+          "type": "url",
+          "id": "feature_image_cta_url",
+          "label": "Optional: Call to action URL"
+        },
+        {
+          "type": "text",
+          "id": "feature_image_cta_text",
+          "label": "Call to action button text",
+          "default": "Shop Now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

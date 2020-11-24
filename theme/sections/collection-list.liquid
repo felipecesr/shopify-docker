@@ -1,0 +1,133 @@
+<!-- sections/collection-list.liquid -->
+
+{% case section.blocks.size %}
+  {% when 1 %}
+    {% assign grid_classes = "large--one-whole medium-down--one-whole, " | split: ", " %}
+  {% when 2 %}
+    {% assign grid_classes = "large--one-half medium-down--one-whole, large--one-half medium-down--one-whole" | split: ", " %}
+  {% when 3 %}
+    {% assign grid_classes = "large--one-whole medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole" | split: ", " %}
+  {% when 4 %}
+    {% assign grid_classes = "large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole" | split: ", " %}
+  {% when 5 %}
+    {% assign grid_classes = "large--one-whole medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole" | split: ", " %}
+  {% when 6 %}
+    {% assign grid_classes = "large--one-whole medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-half medium-down--one-whole, large--one-whole medium-down--one-whole" | split: ", " %}
+{% endcase %}
+
+<section class="featured_collections">
+    {% unless section.settings.title == blank %}
+    <div class="wrapper">
+      <h2 class="section_title">
+          {{ section.settings.title }}
+        <div class="border"></div>
+      </h2>
+    </div>
+    {% endunless %}
+
+    <div class="wrapper">
+      {% assign counter = 0 %}
+      {% assign offset = 0 %}
+      {% unless section.blocks.size == 2 or section.blocks.size == 4 %}
+      <div class="grid-uniform product-grid section-content">
+        {% for block in section.blocks limit: 1 %}
+          {% if block.settings.selected_collection and block.settings.selected_collection != '' %}
+            {% assign selected_collection = collections[block.settings.selected_collection] %}
+            <div class="grid__item sbs-image {{ grid_classes[counter] }}" {{ block.shopify_attributes }}>
+              {% include 'collection-list__item', selected_collection: selected_collection, cta_text: block.settings.selected_collection_cta %}
+            </div>
+          {% else %}
+            <div class="grid__item sbs-image {{ grid_classes[counter] }}" {{ block.shopify_attributes }}>
+              {% include 'onboarding-featured-collections' %}
+            </div>
+          {% endif %}
+
+          {% assign counter = counter | plus: 1 %}
+        {% endfor %}
+        {% assign offset = 1 %}
+      </div>
+      {% endunless %}
+      <div class="grid-uniform product-grid section-content">
+        {% for block in section.blocks offset: offset limit: 4 %}
+          {% if block.settings.selected_collection and block.settings.selected_collection != '' %}
+            {% assign selected_collection = collections[block.settings.selected_collection] %}
+            <div class="grid__item sbs-image {{ grid_classes[counter] }}" {{ block.shopify_attributes }}>
+              {% include 'collection-list__item', selected_collection: selected_collection, cta_text: block.settings.selected_collection_cta %}
+            </div>
+          {% else %}
+            <div class="grid__item sbs-image {{ grid_classes[counter] }}" {{ block.shopify_attributes }}>
+              {% include 'onboarding-featured-collections' %}
+            </div>
+          {% endif %}
+
+          {% assign counter = counter | plus: 1 %}
+        {% endfor %}
+        {% assign offset = offset | plus: 4 %}
+      </div>
+      {% if section.blocks.size == 6 %}
+      <div class="grid-uniform product-grid section-content">
+        {% for block in section.blocks limit: 1 offset: offset %}
+          {% if block.settings.selected_collection and block.settings.selected_collection != '' %}
+            {% assign selected_collection = collections[block.settings.selected_collection] %}
+            <div class="grid__item sbs-image {{ grid_classes[counter] }}" {{ block.shopify_attributes }}>
+              {% include 'collection-list__item', selected_collection: selected_collection, cta_text: block.settings.selected_collection_cta %}
+            </div>
+          {% else %}
+            <div class="grid__item sbs-image {{ grid_classes[counter] }}" {{ block.shopify_attributes }}>
+              {% include 'onboarding-featured-collections' %}
+            </div>
+          {% endif %}
+
+          {% assign counter = counter | plus: 1 %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection list",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+           "type": "collection",
+           "id": "selected_collection",
+           "label": "Choose collection:"
+        },
+        {
+          "type": "text",
+          "id": "selected_collection_cta",
+          "label": "Call to action text",
+          "default": "Shop Now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection list",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

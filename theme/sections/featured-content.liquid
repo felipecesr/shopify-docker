@@ -1,0 +1,88 @@
+<!-- /snippets/section_feature-text.liquid -->
+
+{% assign push = '' %}
+{% if settings.section_title_align == 'center' %}
+{% assign push = 'push--large--one-eighth' %}
+{% endif %}
+
+<section class="feature-text">
+   <div class="wrapper">
+
+     <h2 class="section_title">
+       {% if section.settings.title != '' %}
+        {{ section.settings.title | escape }}
+       {% endif %}
+       <div class="border"></div>
+     </h2>
+
+     <div class="grid section-content">
+       <div class="grid__item large--six-eighths {{ push }} medium-down--one-whole feature-copy rte {{ section.settings.text_align }}">
+           {{ section.settings.rich_text }}
+       </div>
+     </div>
+   </div>
+   {% if section.settings.url != blank and section.settings.link_text != blank %}
+   <div class="wrapper button-wrapper{% if settings.section_title_align == 'left' %} text-left{% endif %}">
+     <a href="{{ section.settings.url }}" class="btn">{{ section.settings.link_text }} {% include 'icon-forward' %}</span></a>
+   </div>
+   {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Featured page",
+  "settings": [
+    {
+     "type":      "text",
+     "id":        "title",
+     "label":     "Heading",
+     "default":   "Heading"
+    },
+    {
+      "id": "rich_text",
+      "type": "richtext",
+      "label": "Text",
+      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text align",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text"
+    }
+  ],
+  "presets": [
+      {
+        "name": "Rich text",
+        "category": "Text"
+      }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,441 @@
+{% assign if_hero_image = false %}
+{% assign if_custom_hero_height = false %}
+{% assign logo_hero_max_width = '' %}
+{% assign if_alternate_logo = false %}
+{% assign alternate_logo = '' %}
+{% assign hero_image_header_color = '' %}
+{% for block in section.blocks %}
+  {% assign hero_image_active = true %}
+
+  {% assign hero_image = block.settings.hero_image  %}
+  {% assign hero_image_style = block.settings.hero_image_style %}
+  {% capture custom_height %}{{ block.settings.custom_hero_height | escape }}px{% endcapture %}
+
+  {% if block.settings.logo_max_width_hero != '' %}
+    {% assign logo_hero_max_width = block.settings.logo_max_width_hero | escape %}
+  {% endif %}
+  {% if block.settings.alternate_logo %}
+  {% assign if_alternate_logo = true %}
+  {% assign alternate_logo = block.settings.alternate_logo %}
+  {% endif %}
+  {% assign hero_image_header_color = block.settings.banner_text_color %}
+{% endfor %}
+{% assign extraClasses = '' %}
+
+{% if template == 'index' %}
+{% assign extraClasses =  extraClasses | append: 'homepage-header-colors' %}
+{% endif %}
+
+{% if hero_image_active and template == 'index' %}
+{% capture header_hero_style %} hero-active--{{ hero_image_style }} {% endcapture %}
+{% assign extraClasses =  extraClasses | append: ' hero-active ' %}
+{% assign extraClasses =  extraClasses | append: header_hero_style %}
+{% assign extraClasses =  extraClasses | append: hero_image_header_color %}
+{% endif %}
+
+
+{% assign border_class = '' %}
+{% if template == 'index' and section.settings.hide_border_homepage %}
+  {% assign border_class = '' %}
+{% else %}
+  {% assign border_class = 'show-border' %}
+{% endif %}
+
+{% if section.settings.header_layout == 'layout_left' %}
+{% assign extraClasses =  extraClasses | append: ' logo-aligned-left' %}
+{% else %}
+{% assign extraClasses =  extraClasses | append: ' nav-aligned-left' %}
+{% endif %}
+
+
+
+
+
+<header class="site-header {{ extraClasses }} {{ border_class }}" role="banner"   data-section-type="header" data-section-id="{{ section.id }}" data-template="{{ template.name }}">
+
+
+  {% if hero_image_active and template == 'index' %}
+  <div class="hero-image-header-wrap">
+  {% endif %}
+
+    {% if section.settings.show_announcement %}
+      {% if section.settings.home_page_only == false or template.name == 'index' %}
+
+        <style>
+          .announcement-bar {
+            background-color: {{ section.settings.color_bg }};
+          }
+
+          .announcement-bar--link:hover {
+            {% assign brightness = section.settings.color_bg | color_brightness %}
+
+            {% if brightness <= 192 %}
+              {% assign lightenAmount = 255 | minus: brightness | divided_by: 255 | times: 16 %}
+              background-color: {{ section.settings.color_bg | color_lighten: lightenAmount }};
+            {% else %}
+              {% assign darkenAmount = 255 | divided_by: brightness | times: 8 %}
+              background-color: {{ section.settings.color_bg | color_darken: darkenAmount }};
+            {% endif %}
+          }
+
+          .announcement-bar__message {
+            color: {{ section.settings.color_text }};
+          }
+        </style>
+
+        {% if section.settings.link == blank %}
+          <div class="announcement-bar secondary">
+        {% else %}
+          <a href="{{ section.settings.link }}" class="announcement-bar announcement-bar--link secondary">
+        {% endif %}
+
+          <p class="announcement-bar__message">{{ section.settings.text | escape }}</p>
+
+        {% if section.settings.link == blank %}
+          </div>
+        {% else %}
+          </a>
+        {% endif %}
+
+      {% endif %}
+    {% endif %}
+
+  <div class="wrapper">
+    <div class="headerInnerWrap {{ section.settings.header_border_height }}">
+      <div class="grid--full grid--table">
+
+        {% assign site-title_classes = ""  %}
+        {% assign cart_classes = ""  %}
+        {% assign menu-nav_classes = ""  %}
+
+        <!-- if logo is on the left -->
+        {% if section.settings.header_layout == 'layout_left' %}
+
+          {% assign site-title_classes = "xlarge--hide large--hide"  %}
+          {% assign menu-nav_classes = "large--hide"  %}
+
+          {% if hero_image_active and template == 'index' %}
+            {% assign menu-nav_classes = "large--hide"  %}
+            {% assign cart_classes = "large--one-third"  %}
+            {% assign site-title_classes = "large--hide" %}
+          {% else %}
+            {% assign cart_classes = "large--one-quarter"  %}
+          {% endif %}
+
+          <div class="grid__item large--three-quarters medium-down--hide logo-and-nav logo-left text-left">
+            {% unless hero_image_active and template == 'index' %}
+            {% include 'header_logo' %}
+            {% endunless %}
+            {% include 'header_navigation' %}
+          </div> <!-- end logo -->
+
+        <!-- else if logo is in the center-->
+        {% else %}
+
+            {% if section.settings.logo_use_image %}
+              {% assign cart_classes = "xlarge--one-third large--one-third"  %}
+              {% assign menu-nav_classes = "xlarge--one-third large--one-third"  %}
+              {% assign site-title_classes = "xlarge--one-third large--one-third"  %}
+            {% else %}
+              {% assign cart_classes = "xlarge--one-third large--one-quarter"  %}
+              {% assign menu-nav_classes = "xlarge--one-third large--one-quarter"  %}
+              {% assign site-title_classes = "xlarge--one-third large--two-quarters"  %}
+            {% endif %}
+
+            {% if hero_image_active and template == 'index' %}
+              {% assign menu-nav_classes = "large--two-thirds"  %}
+              {% assign cart_classes = "large--one-third"  %}
+              {% assign site-title_classes = "large--hide" %}
+            {% endif %}
+
+        {% endif %}
+
+        <div class="grid__item {{ menu-nav_classes }} nav-left-only {% if section.settings.header_layout == 'layout_mobile' %}always-burger-menu{% endif %} medium-down--one-eighth text-left">
+
+          {% include 'header_burger-menu' %}
+          {% include 'header_navigation' %}
+
+        </div><!-- end navigation / drawer -->
+
+        <div class="grid__item {{ site-title_classes }}  medium-down--six-eighths text-center site-title_container">
+          {% unless hero_image_active and template == 'index' %}
+          {% include 'header_logo' %}
+          {% endunless %}
+        </div> <!-- end logo -->
+
+        <div class="grid__item {{ cart_classes }}  medium-down--one-eighth text-right header-meta">
+          {% include 'header_meta' %}
+        </div><!-- end cart / social -->
+
+      </div><!-- end grid item -->
+
+
+      <div class="grid--full sub-nav">
+        {% include 'navigation_sub-nav' %}
+        {% include 'navigation_sub-sub-nav' %}
+      </div>
+
+
+
+
+
+    </div><!-- end headerInnerWrap -->
+  </div><!-- end wrapper -->
+
+  {% if hero_image_active and template == 'index' %}
+  </div> <!-- end additional wrapper for header content -->
+    {% include 'header_hero-image' %}
+  {% endif %}
+
+</header>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  {% if section.settings.logo %}
+    {% assign image_size = section.settings.logo.width | append:'x' %}
+    "logo": {{ section.settings.logo | img_url: image_size | prepend: "https:" | json }},
+  {% endif %}
+  "sameAs": [
+    {{ settings.social_facebook_url | json }},
+    {{ settings.social_instagram_url | json }},
+    {{ settings.social_twitter_url | json }},
+    {{ settings.social_patreon_url | json }},
+    {{ settings.social_pinterest_url | json }},
+    {{ settings.social_soundcloud_url | json }},
+    {{ settings.social_spotify_url | json }},
+    {{ settings.social_bandcamp_url | json }},
+    {{ settings.social_flickr_url | json }},
+    {{ settings.social_vimeo_url | json }},
+    {{ settings.social_apple_url | json }},
+    {{ settings.social_lastfm_url | json }},
+    {{ settings.social_youtube_url | json }},
+    {{ settings.social_google_url | json }},
+    {{ settings.social_tumblr_url | json }},
+    {{ settings.social_triplej_url | json }},
+    {{ settings.social_mixcloud_url | json }}
+  ],
+  "url": {{ shop.url | append: page.url | json }}
+}
+</script>
+
+{% if request.page_type == 'index' %}
+  {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ shop.url | append: page.url | json }}
+    }
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-site-header",
+  "max_blocks": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom logo",
+      "info": "800 x 300px recommended."
+    },
+    {
+      "type":      "range",
+      "id":        "logo_max_width",
+      "min":       20,
+      "max":        800,
+      "step":       10,
+      "unit":       "px",
+      "label":     "Custom logo width",
+      "default":   100,
+      "info": "Note: if image block is active, this won't apply to the homepage."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "Choose layout:",
+      "info": "Note: if image block is active the logo will be moved into the center of the banner.",
+      "options": [
+        {
+          "value": "layout_mobile",
+          "label": "Mobile navigation style on desktop"
+        },
+        {
+          "value": "layout_left",
+          "label": "Logo to the left"
+        }
+      ]
+    },
+    {
+      "type": "link_list",
+      "id": "main_linklist",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "header_border_height",
+      "label": "Bottom border height",
+      "info": "Note: if image block is active, border won't display on home page.",
+      "options": [
+        {
+          "value": "header-border--none",
+          "label": "none"
+        },
+        {
+          "value": "header-border--small",
+          "label": "Small"
+        },
+        {
+          "value": "header-border--large",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_border_homepage",
+      "label": "Hide border on home page",
+      "info": "Not applicable if image block is active"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_show_search_icon",
+      "label": "Show search icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_social_icons_header",
+      "label": "Show social icons"
+    },
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "home_page_only",
+      "label": "Home page only",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Announce something here"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Bar",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero_image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "select",
+          "id": "hero_image_style",
+          "label": "Image style:",
+          "options": [
+            {
+              "value": "full_screen",
+              "label": "Full Screen"
+            },
+            {
+              "value": "fit_content",
+              "label": "Content"
+            }
+          ],
+          "info": "Use \'Content\' style if you want to avoid image cropping."
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image",
+          "label": "Image",
+          "info": "1500px wide recommended."
+        },
+        {
+          "type": "select",
+          "id": "banner_text_color",
+          "label": "Text color",
+          "options": [
+            {
+              "value": "homepage-header-colors--default",
+              "label": "Default"
+            },
+            {
+              "value": "homepage-header-colors--white",
+              "label": "White"
+            },
+            {
+              "value": "homepage-header-colors--black",
+              "label": "Black"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Logo"
+        },
+        {
+          "type":      "range",
+          "id":        "logo_max_width_hero",
+          "min":       100,
+          "max":        1200,
+          "step":       20,
+          "unit":       "px",
+          "label":     "Max logo width for image block",
+          "default":   100,
+          "info": "Max width of logo image when displayed over the banner image."
+        },
+        {
+          "type": "image_picker",
+          "id": "alternate_logo",
+          "label": "Alternate logo",
+          "info": "Use an alternate logo on the header image. 800 x 300px recommended."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

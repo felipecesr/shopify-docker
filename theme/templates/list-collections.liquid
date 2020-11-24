@@ -1,0 +1,99 @@
+<!-- /templates/list-collections.liquid -->
+{% comment %}
+
+  This page represents the /collections and /products pages.
+  It is an optional, but highly recommended, template for your theme.
+
+  More info:
+    - http://docs.shopify.com/manual/configuration/store-customization/taking-control-of-collections-listing
+
+{% endcomment %}
+
+{% include 'breadcrumb' %}
+
+
+<section class="list-collections">
+
+  <header class="grid--table collection-header">
+    <div class="grid__item large--one-half">
+      <h1 class="standard-index">{{ page_title }}</h1>
+    </div>
+  </header>
+
+<div class="grid-uniform product-grid">
+{% comment %}
+  Loop through each collection, except 'frontpage'
+{% endcomment %}
+{% for collection in collections %}
+
+  {% unless collection.handle == 'frontpage' %}
+
+    {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+    <div class="grid__item large--one-third medium--one-half">
+      <a class="product-grid-link" href="{{ collection.url }}">
+        {% if collection.image %}
+        <div class="grid__image">
+
+          {% assign collection_image = collection.image %}
+          {% capture img_id %}CollectionImage-{{ collection_image.id }}{% endcapture %}
+          {% capture wrapper_id %}CollectionImageWrapper-{{ collection_image.id }}{% endcapture %}
+          {%- assign img_url = collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
+            <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;">
+              <img id="{{ img_id }}"
+                   class="resp-img lazyload"
+                   src="{{ collection_image | img_url: '300x' }}"
+                   data-src="{{ img_url }}"
+                   data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
+                   data-aspectratio="{{ collection_image.aspect_ratio }}"
+                   data-sizes="auto"
+                   alt="{{ collection_image.alt | escape }}">
+            </div>
+          </div>
+          <noscript>
+            <img src="{{ collection_image.src | img_url: 'large' }}" alt="{{ collection_image.alt | escape }}">
+          </noscript>
+
+        </div>
+        {% else %}
+        {% for product in collection.products limit:1 %}
+        <div class="grid__image">
+          {% assign collection_image = product.featured_image %}
+          {% capture img_id %}CollectionImage-{{ collection_image.id }}{% endcapture %}
+          {% capture wrapper_id %}CollectionImageWrapper-{{ collection_image.id }}{% endcapture %}
+          {%- assign img_url = collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
+            <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;">
+              <img id="{{ img_id }}"
+                   class="resp-img lazyload"
+                   src="{{ collection_image | img_url: '300x' }}"
+                   data-src="{{ img_url }}"
+                   data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
+                   data-aspectratio="{{ collection_image.aspect_ratio }}"
+                   data-sizes="auto"
+                   alt="{{ collection_image.alt | escape }}">
+            </div>
+          </div>
+          <noscript>
+            <img src="{{ collection_image.src | img_url: 'large' }}" alt="{{ collection_image.alt | escape }}">
+          </noscript>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <!--</a>-->
+
+        <p class="h6">
+          <span class="product-grid-title">{{ collection.title }}</span>
+        </p>
+
+        {% if collection.description %}
+        <p class="info ">
+          {{ collection.description | strip_html | truncatewords: 20, "..."  }}
+        </p>
+        {% endif %}
+      </a>
+    </div>
+  {% endunless %}
+
+{% endfor %}
+</div>

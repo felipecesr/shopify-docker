@@ -1,0 +1,120 @@
+
+<!-- /snippets/feature-products.liquid -->
+{% comment %}
+  Use class grid-uniform to have evenly sized columns clear
+  each other properly at each breakpoint.
+{% endcomment %}
+{% assign onBoarding = false %}
+
+{% assign selected_collection = section.settings.selected_collection %}
+
+<section class="homepage-featured-products">
+
+  <div class="wrapper">
+    <h2 class="section_title">
+      {% if selected_collection and selected_collection != '' %}
+        {% if section.settings.title == blank %}
+          {{ collections[selected_collection].title }}
+        {% else %}
+          {{ section.settings.title  }}
+        {% endif %}
+      {% else %}
+        {% if section.settings.title == blank %}
+          {{ 'homepage.onboarding.collection_title' | t }}
+        {% else %}
+          {{ section.settings.title }}
+        {% endif %}
+      {% endif %}
+      <div class="border"></div>
+    </h2>
+  </div>
+
+  <div class="wrapper">
+
+    <div class="grid-uniform product-grid section-content">
+      {% assign limit = section.settings.limit | plus: 0 %}
+      {% for product in collections[selected_collection].products limit:limit %}
+
+        {% comment %}
+          Change the grid item width by using classes from the grid in
+          the grid_item_width variable.
+
+          Example:
+            - {% assign grid_item_width = 'large--one-third medium--one-half' %}
+        {% endcomment %}
+        {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+        {% include 'product-grid-item' %}
+
+      {% else %}
+
+        {% assign onBoarding = true %}
+        {% comment %}
+          For onboarding new users to your theme, we add some default products and onboarding tutorials to help populate their store
+        {% endcomment %}
+        {% unless emptyState %}
+          {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+          {% assign emptyState = true %}
+        {% endunless %}
+
+        {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+        {% include 'onboarding-featured-products' with section.settings.limit as limit %}
+
+      {% endfor %}
+
+    </div>
+
+    {% if onBoarding == false %}
+      {% if collections[selected_collection].all_products_count > limit %}
+      <div class="button-wrapper">
+        <a href="{{ collections[selected_collection].url }}" class="collection-view-all btn">{{ 'collections.general.all_of_collection' | t: collection: collections[selected_collection].title }} <span class="next-arrow">{% include 'icon-forward' %}</span></a>
+      </div>
+      {% endif %}
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Heading",
+      "info": "If left blank, name of collection will be used."
+    },
+    {
+       "type": "collection",
+       "id": "selected_collection",
+       "label": "Choose collection:"
+    },
+    {
+      "type": "select",
+      "id": "limit",
+      "label": "Max products to show",
+      "options": [
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        },
+        {
+          "value": "12",
+          "label": "12"
+        }
+      ],
+      "default": "4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

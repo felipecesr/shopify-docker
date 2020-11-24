@@ -1,0 +1,33 @@
+// Label functions
+window.Label = window.Label || {};
+
+
+
+Label.init = function () {
+  //FastClick.attach(document.body);
+
+
+  Label.cacheSelectors();
+  Label.subNav();
+  Label.setupFocus();
+  Label.drawersInit();
+  Label.mobileNavToggle();
+  Label.productImageSwitch();
+  Label.responsiveVideos();
+  Label.collectionViews();
+  Label.loginForms();
+  Label.globals();
+  Label.header();
+  Label.heroLetterSpacing();
+  Label.checkNavSize();
+  Label.resize();
+  Label.formCapture();
+
+  Label.sections();
+
+
+};
+
+
+// Initialize Timber's JS on docready
+$(Label.init);

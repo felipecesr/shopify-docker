@@ -1,0 +1,20 @@
+<!-- /snippets/onboarding-featured-collections.liquid -->
+<a href="{{ shop.url }}{{ collection_1.url }}" class="onboarding-collection">
+  <div class="content">
+    <div class="grid--full grid--table">
+      <div class="grid__item">
+        <div class="feature-copy-holder with-cta">
+          <h3 class="feature-image-overlay">
+              {{ 'homepage.onboarding.collection_title' | t }}
+          </h3>
+        </div>
+        <div href="#" class="feature-image-cta btn">{{ 'homepage.onboarding.collection_cta' | t }}  <span class="next-arrow">{% include 'icon-forward' %}</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+  {%- assign placeholder = 'collection-' | append: current -%}
+  {{ placeholder | placeholder_svg_tag }}
+</a>

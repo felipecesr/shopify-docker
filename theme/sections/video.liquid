@@ -1,0 +1,51 @@
+<!-- /sections/video.liquid -->
+<section class="feature-video{% unless section.settings.heading == blank %} feature-video--with-padding{% endunless %}" data-section-type="video" data-section-id="{{ section.id }}">
+      {% unless section.settings.heading == blank %}
+        <h2 class="section_title">
+          {{ section.settings.heading }}
+          <div class="border"></div>
+        </h2>
+      {% endunless %}
+      <div class="grid--full grid--table">
+        <div class="grid__item">
+          {% if section.settings.video_url %}
+            {% if section.settings.video_url.type == 'youtube' %}
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+            {% endif %}
+            {% if section.settings.video_url.type == 'vimeo' %}
+              <iframe src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?color=00ff00" width="500" height="232" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            {% endif %}
+          {% else %}
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/_9VUPq3SxOc?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+        </div>
+      </div>
+</section>
+
+{% schema %}
+{
+  "name": "Video",
+  "class": "section-video",
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading"
+    },
+    {
+      "id": "video_url",
+      "type": "video_url",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"],
+      "info": "Accepts URLs from YouTube or Vimeo",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video",
+      "category": "Video"
+    }
+  ]
+}
+{% endschema %}

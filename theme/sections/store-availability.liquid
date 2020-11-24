@@ -1,0 +1,108 @@
+{% assign pick_up_availabilities = product_variant.store_availabilities | where: 'pick_up_enabled', true %}
+{% if pick_up_availabilities.size > 0 %}
+<div class="store-availability-template__container"
+     data-section-id="{{ section.id }}"
+     data-section-type="store-availability">
+    <div class="pickup-container">
+      {% assign closest_location = pick_up_availabilities.first %}
+        <div class="pickup__icon"
+             aria-hidden="true"
+             focusable="false"
+             role="presentation">
+          {% if closest_location.available %}
+            {% include 'icon-in-stock' %}
+          {% else %}
+            {% include 'icon-out-of-stock' %}
+          {% endif %}
+        </div>
+        <div class="pickup__information">
+          {% if closest_location.available %}
+            <h3 class="pickup__store">
+              {{ 'store_availability.general.pick_up_available_at_html' | t: location_name: closest_location.location.name }}
+            </h3>
+            <small class="pickup__time">
+              {{ closest_location.pick_up_time }}
+            </small>
+            <div class="pickup__more">
+              <button class="pickup__more-link js-drawer-open-right"
+                      aria-haspopup="dialog">
+                {% if pick_up_availabilities.size == 1 %}
+                  {{ 'store_availability.general.view_store_info' | t }}
+                {% else %}
+                  {{ 'store_availability.general.check_other_stores' | t }}
+                {% endif %}
+              </button>
+            </div>
+          {% else %}
+            <h3 class="pickup__store">
+              {{ 'store_availability.general.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}
+            </h3>
+            {% if pick_up_availabilities.size > 1 %}
+            <div class="pickup__more">
+              <button class="js-drawer-open-right pickup__more-link"
+                      aria-haspopup="dialog">
+                {{ 'store_availability.general.check_other_stores' | t }}
+              </button>
+            </div>
+            {% endif %}
+          {% endif %}
+        </div>
+    </div>
+
+    <template id="StoreAvailabilitiesList"
+              data-product-variant-title="{{ product_variant.title }}">
+      <div role="list">
+      {% for availability in pick_up_availabilities %}
+        <div class="pickup-expanded__list-item"
+             data-variant-availability>
+          <div>
+            <h3 class="pickup-expanded__store">
+              {{ availability.location.name }}
+            </h3>
+          </div>
+          <div class="pickup-expanded__information">
+            {% if availability.available %}
+              <div class="pickup-expanded__icon"
+                   aria-hidden="true"
+                   focusable="false"
+                   role="presentation">
+                {% include 'icon-in-stock' %}
+              </div>
+              <small class="pickup-expanded__details">
+                {{ 'store_availability.general.pick_up_available' | t }}, {{ availability.pick_up_time | downcase }}
+              </small>
+            {% else %}
+              <div class="pickup-expanded__icon"
+                   aria-hidden="true"
+                   focusable="false"
+                   role="presentation">
+                {% include 'icon-out-of-stock' %}
+              </div>
+              <small class="pickup-expanded__details">
+                {{ 'store_availability.general.pick_up_currently_unavailable' | t }}
+              </small>
+            {% endif %}
+          </div>
+          {%- assign address = availability.location.address -%}
+          <address class="pickup-expanded__address">
+            {{ address | format_address }}
+            {%- if address.phone.size > 0 %}
+              <a href="tel:{{ address.phone | replace: ' ', '' }}">
+                {{ address.phone }}
+              </a><br>
+            {%- endif -%}
+          </address>
+        </div>
+      {% endfor %}
+      </div>
+    </template>
+
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": {},
+  "settings": []
+}
+{% endschema %}

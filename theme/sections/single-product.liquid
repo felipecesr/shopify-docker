@@ -1,0 +1,451 @@
+<!-- /snippets/section_single-product.liquid -->
+{% assign product = all_products[section.settings.feature_single_product] %}
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+{% capture selectID %}select-{{ product.handle }}{% endcapture %}
+{% capture sectionID %}section-{{ product.handle }}{% endcapture %}
+
+{% if section.settings.use_custom_background %}
+  <style>
+    #shopify-section-{{ section.id }} {
+      background-color: {{ section.settings.custom_background }};
+    }
+  </style>
+{% endif %}
+
+{% assign has_video = false %}
+{% assign has_external_video = false %}
+{% assign has_model = false %}
+
+{% for media in product.media %}
+  {% case media.media_type %}
+  {% when 'video' %}
+    {% assign has_video = true %}
+  {% when 'external_video' %}
+    {% assign has_external_video = true %}
+  {% when 'model' %}
+    {% assign has_model = true %}
+  {% endcase %}
+{% endfor %}
+
+<section class="single-product section-product {% if section.settings.feature_single_product == '' %} no-product{% endif %}{% if section.settings.use_custom_background %} custom-background{% endif %}{% if section.settings.single_product_behaviour == 'add_to_cart' %} ajax-enabled{% endif %}{% if section.settings.enable_payment_button %} has-payment-icons{% endif %}{% if current_variant.unit_price_measurement %} has-unit-price{% endif %}{% if shop.taxes_included or shop.shipping_policy.body != blank %} has-taxes-or-shipping-policy-text{% endif %}"
+         id="{{ sectionID }}"
+         data-section-id="{{ section.id }}"
+         data-money-format="{{ shop.money_format | strip_html }}"
+         data-section-type="product"
+         data-has-video="{{ has_video }}"
+         data-has-external-video="{{ has_external_video }}"
+         data-has-model="{{ has_model }}">
+
+  {% if section.settings.title != '' %}
+  <div class="wrapper">
+    <h2 class="section_title">
+      {{ section.settings.title | escape }}
+      <div class="border"></div>
+    </h2>
+  </div>
+  {% endif %}
+
+  <div class="wrapper">
+    <div class="section-content">
+      <div class="grid--table product-single">
+
+        <div class="grid__item large--one-half medium--one-whole text-right single-product-image">
+          {% if product.media != blank %}
+            {% if product.has_only_default_variant %}
+              {% assign featured_media = product.featured_media %}
+              {% assign media = featured_media %}
+              {% include 'media', media: media, featured_media: featured_media %}
+            {% else %}
+              {% assign featured_media = current_variant.featured_media | default: product.featured_media %}
+              {% assign media = featured_media %}
+              {% include 'media', media: media, featured_media: featured_media %}
+            {% endif %}
+
+            {% for variant in product.variants %}
+              {% if variant.featured_media and variant.featured_media != featured_media %}
+                {% assign variant_media_ids_string = variant_media_ids_string | append: variant.featured_media.id | append: ',' %}
+              {% endif %}
+            {% endfor %}
+            {% assign variant_media_ids = variant_media_ids_string | split: ',' | uniq %}
+
+            {% for id in variant_media_ids %}
+              {% assign id_number = id | plus: 0 %}
+              {% assign media = product.media | where: 'id', id_number | first %}
+              {% include 'media', media: media, featured_media: featured_media %}
+            {% endfor %}
+          {% else %}
+            <div class="product-single__media">
+              <a href="/admin/themes/{{ theme.id }}/settings" rel="gallery-1" class="product__placeholder" >
+                {{ 'image' | placeholder_svg_tag }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="grid__item large--one-half medium--one-whole single-product-content text-left">
+
+
+          <h3 class="standard-single">
+            {% if product.title != '' %}
+            <a href="{{ product.url }}" >{{ product.title }}</a>
+            {% else %}
+            <a href="/admin/themes/{{ theme.id }}/settings" >{{ 'homepage.onboarding.product_title' | t }}</a>
+            {% endif %}
+          </h3>
+          {% if section.settings.show_vendor %}
+          <h4 class="standard-index">
+            {{ product.vendor }}
+          </h4>
+          {% endif %}
+          <div class="priceWrapper" data-price-wrapper>
+            <span id="ProductPrice" class="standard-index" data-product-price>
+              {{ current_variant.price | money }}
+            </span>
+            {% if product.compare_at_price_max > product.price %}
+              <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+              <s id="ComparePrice" class="standard-index" data-compare-price>
+                {% if current_variant.compare_at_price > current_variant.price %}
+                  {{ current_variant.compare_at_price | money }}
+                {% endif %}
+              </s>
+            {% endif %}
+          </div>
+          <div class="unitPriceWrapper secondary" data-unit-price-wrapper>
+            <span class="visually-hidden">
+              {{- 'products.product.unit_price_label' | t -}}
+            </span>
+            <span id="unitPrice">
+              <span data-unit-price>
+                {{- current_variant.unit_price | money -}}
+              </span>
+              <span aria-hidden="true">
+                /
+              </span>
+              <span class="visually-hidden">
+                {{- 'general.accessibility.unit_price_separator' | t -}}
+              </span>
+              <span data-unit-price-measurement-reference-value>
+              {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+                {{- current_variant.unit_price_measurement.reference_value -}}
+              {%- endif -%}
+              </span><!--
+              --><span data-unit-price-measurement-reference-unit>
+                {{- current_variant.unit_price_measurement.reference_unit -}}
+              </span>
+            </span>
+          </div>
+
+          {%- if product != blank -%}
+            {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+            <div class="taxAndShippingPolicyWrapper rte">
+              <span>
+                {%- if shop.taxes_included -%}
+                  {{ 'products.product.include_taxes' | t }}
+                {%- endif -%}
+
+                {%- if shop.shipping_policy.body != blank -%}
+                  {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                {%- endif -%}
+              </span>
+            </div>
+            {%- endif -%}
+          {%- endif -%}
+
+          {% if section.settings.single_product_subheader != '' %}
+            <h5 class="secondary">{{ section.settings.single_product_subheader | escape }}</h5>
+          {% endif %}
+
+          {% if section.settings.single_product_description != '' %}
+            <div class="feature-copy">{{ section.settings.single_product_description }}</div>
+          {% else %}
+            <div class="feature-copy">{{ product.description }}</div>
+          {% endif %}
+
+          {% comment %}
+            ID addToCartForm is a selector for the ajax cart plugin
+          {% endcomment %}
+          {% if section.settings.single_product_behaviour == 'add_to_cart' %}
+
+            {% if product == empty %}
+
+              {% if section.settings.single_product_show_quantity %}
+              <div class="quantity-wrapper">
+                <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
+                <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+              </div>
+              {% endif %}
+
+              <div class="cta-content {% unless current_variant.available %}hide-pay-buttons{% endunless %} {% if section.settings.enable_payment_button %}cta-content--pay-buttons{% endif %}"  data-cta-content>
+                <div class="cta-btn-container">
+                  <button type="submit" name="add" class="AddToCart btn btn--medium" id="AddToCart--{{ section.id }}" data-add-to-cart>
+                    <span id="AddToCartText" class="cart-text" data-add-to-cart-text>{{ 'products.product.add_to_cart' | t }}</span>
+                    <span id="AddingToCartText" class="cart-text">{{ 'products.product.adding_to_cart' | t }}</span>
+                    <span id="AddedToCartText" class="cart-text">{{ 'products.product.added_to_cart' | t }}</span>
+                     <span class="next-arrow">{% include 'icon-forward' %}</span>
+                  </button>
+                </div>
+                {% if section.settings.enable_payment_button %}
+                <div class="dynamic-payment-buttons">
+                  {{ form | payment_button }}
+                </div>
+                {% endif %}
+
+                <div class="cta-complete">
+                  {{ 'products.product.added_to_cart' | t }}! {{ 'products.product.add_to_cart_confirm_html' | t: cart_url: routes.cart_url,  link_url: routes.all_products_collection_url }}.
+                </div>
+              </div>
+
+            {% else %}
+
+            <div id="AddToCartForm--{{ section.id }}" class="form-container AddToCartForm form-vertical {% if section.settings.hide_drop_down_labels %}hide-labels{% endif %}">
+            {% comment %}
+            <form action="/cart/add" method="post" enctype="multipart/form-data" >
+            {% endcomment %}
+            {% form 'product', product %}
+
+              {% comment %}
+                Add product variants as a dropdown.
+                  - By default, each variant (or combination of variants) will display as its own <option>
+                  - To separate these into multiple steps, which we suggest, use option_selection.js (see below)
+
+                You can leverage jQuery to add a callback on page load and each time the select element changes:
+                  - Include option_selection.js (as seen at the bottom of this file)
+                  - This allows you to use JavaScript anytime the variant dropdown changes
+                  - This also separates out your variant options (ie. size, color, etc.) to separate select elements
+
+                For more information on products with multiple options, visit:
+                  - http://docs.shopify.com/support/your-website/themes/can-i-make-my-theme-use-products-with-multiple-options#update-product-liquid
+              {% endcomment %}
+              {% unless product.has_only_default_variant %}
+                  {% for option in product.options_with_values %}
+                    <div class="selector-wrapper js product-form__item">
+                      <label {% if option.name == 'default' or option.name == 'Default' %}class="label--hidden" {% endif %}for="SingleOptionSelector-{{ forloop.index0 }}">
+                        {{ option.name }}
+                      </label>
+                      <select class="single-option-selector single-option-selector-{{ section.id }} product-form__input" id="SingleOptionSelector-{{ forloop.index0 }}" data-index="option{{ forloop.index }}"  data-single-option-selector>
+                        {% for value in option.values %}
+                          <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  {% endfor %}
+                {% endunless %}
+
+                <select name="id" id="ProductSelect-{{ selectID }}" data-section="{{ section.id }}" class="product-form__variants no-js"  data-product-select>
+                  {% for variant in product.variants %}
+                    {% if variant.available %}
+                      <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">
+                        {{ variant.title }}
+                      </option>
+                    {% else %}
+                      <option disabled="disabled">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+
+              <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+
+
+
+              {% if section.settings.single_product_show_quantity %}
+              <div class="quantity-wrapper">
+                <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
+                <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+              </div>
+              {% endif %}
+
+              <div class="cta-content {% unless current_variant.available %}hide-pay-buttons{% endunless %} {% if section.settings.enable_payment_button %}cta-content--pay-buttons{% endif %}"  data-cta-content>
+                <div class="cta-btn-container">
+                  <button type="submit" name="add" class="AddToCart btn btn--medium" {% unless current_variant.available %}disabled="disabled"{% endunless %} id="AddToCart--{{ section.id }}" data-add-to-cart>
+                    {% if current_variant.available %}
+                    <span id="AddToCartText" class="cart-text"  data-add-to-cart-text>{{ 'products.product.add_to_cart' | t }}</span>
+                    <span id="AddingToCartText" class="cart-text">{{ 'products.product.adding_to_cart' | t }}</span>
+                    <span id="AddedToCartText" class="cart-text">{{ 'products.product.added_to_cart' | t }}</span>
+                    <span class="next-arrow">{% include 'icon-forward' %}</span>
+                    {% else %}
+                    <span id="SoldOutText">{{ 'products.product.sold_out' | t }}</span>
+                    {% endif %}
+                  </button>
+                </div>
+
+                {% if section.settings.enable_payment_button %}
+                  <div class="dynamic-payment-buttons">
+                    {{ form | payment_button }}
+                  </div>
+                {% endif %}
+
+                <div class="cta-complete">
+                  {{ 'products.product.added_to_cart' | t }}! {{ 'products.product.add_to_cart_confirm_html' | t: cart_url: routes.cart_url, link_url: routes.all_products_collection_url }}.
+                </div>
+              </div>
+
+              {% comment %}
+              </form>
+              {% endcomment %}
+              {% endform %}
+              </div>
+            {% endif %}
+          {% else %}
+            <a class="btn btn--medium" href="{{ product.url }}">
+              {{ section.settings.single_product_cta_text | escape }}
+               <span class="next-arrow">{% include 'icon-forward' %}</span>
+            </a>
+          {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  {% if section.settings.single_product_behaviour == 'add_to_cart' and section.settings.feature_single_product != blank %}
+
+  <script type="application/json" id="ProductJson-{{ section.id }}"  data-product-json>
+    {{ product | json }}
+  </script>
+
+  {% endif %}
+
+  <script type="application/json" id="ModelJson-{{ section.id }}">
+    {{ product.media | where: 'media_type', 'model' | json }}
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ shop.url | append: product.url | json }},
+    {%- if product.featured_media -%}
+      {%- assign media_size = product.featured_media.preview_image.width | append: 'x' -%}
+      "image": [
+        {{ product.featured_media | img_url: media_size | prepend: "https:" | json }}
+      ],
+    {%- endif -%}
+    "description": {{ product.description | strip_html | json }},
+    {%- if current_variant.sku != blank -%}
+      "sku": {{ current_variant.sku | json }},
+    {%- endif -%}
+    "brand": {
+      "@type": "Thing",
+      "name": {{ product.vendor | json }}
+    },
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type" : "Offer",
+          {%- if variant.sku != blank -%}
+            "sku": {{ variant.sku | json }},
+          {%- endif -%}
+          "availability" : "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price" : {{ variant.price | divided_by: 100.00 | json }},
+          "priceCurrency" : {{ cart.currency.iso_code | json }},
+          "url" : {{ shop.url | append: variant.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "class": "section-single-product",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Choose a product to be highlighted on the home page."
+    },
+    {
+       "type": "product",
+       "id": "feature_single_product",
+       "label": "Select product:"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "single_product_subheader",
+      "label": "Subheader text",
+      "info": "e.g. \"Latest Release\", \"October 2015\""
+    },
+    {
+      "type": "richtext",
+      "id": "single_product_description",
+      "label": "Single product description",
+      "default": "<p>Include a shorter description for your product here.</p>",
+      "info": "Override the default product description with your own text."
+    },
+    {
+      "type": "checkbox",
+      "id": "single_product_show_quantity",
+      "label": "Show quantity option"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor"
+    },
+    {
+      "type": "select",
+      "id": "single_product_behaviour",
+      "label": "Behavior",
+      "options": [
+        {
+          "value": "add_to_cart",
+          "label": "Add to Cart"
+        },
+        {
+          "value": "product_page",
+          "label": "Link to Product Page"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_payment_button",
+      "label": "Show dynamic checkout button",
+      "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "single_product_cta_text",
+      "label": "Link to product page button text",
+      "info": "If using the \"Link to product page \" behavior",
+      "default": "Find Out More"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_background",
+      "label": "Use custom background color"
+    },
+    {
+      "type": "color",
+      "id": "custom_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Media",
+      "info": "Learn more about [media types](https://help.shopify.com/manual/products/product-media)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label":  "Enable video looping",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured product",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

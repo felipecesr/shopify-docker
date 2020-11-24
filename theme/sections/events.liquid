@@ -1,0 +1,379 @@
+<!-- /sections/events.liquid -->
+{% assign max_events = '' %}
+{% if section.settings.enable_max_events %}
+{% assign max_events = section.settings.number_of_events %}
+{% else %}
+{% assign max_events = 'all' %}
+{% endif %}
+<section class="tour-events"
+         data-source='{{ section.settings.tour_source }}'
+         data-songkick='{{ section.settings.songkick_artist_id | strip | escape }}'
+         data-bandsintown='{{ section.settings.bandsintown_name | strip | escape }}'
+         data-eventbrite-access-token='{{ section.settings.eventbrite_access_token | strip | escape }}'
+         data-eventbrite-organization-id='{{ section.settings.eventbrite_organization_id | strip | escape }}'
+         data-maxevents='{{ max_events }}'
+         data-section-type="events"
+         data-section-id="{{ section.id }}"
+         {% if section.blocks.size == 0 %}
+         data-external-source='true'
+         {% endif %}>
+
+<div class="wrapper">
+  <h2 class="section_title">
+    {{ section.settings.title | escape }}
+    <div class="border"></div>
+  </h2>
+</div>
+
+{% if section.blocks.size == 0 %}
+
+  {% assign tour_input = false %}
+  {% case section.settings.tour_source %}
+    {% when 'tour_songkick' %}
+      {% if section.settings.songkick_artist_id != '' %}
+        {% assign tour_input = true %}
+      {% endif %}
+    {% when 'tour_bandsintown' %}
+      {% if section.settings.bandsintown_name != '' %}
+        {% assign tour_input = true %}
+      {% endif %}
+    {% when 'tour_eventbrite' %}
+      {% if section.settings.eventbrite_access_token != '' %}
+        {% assign tour_input = true %}
+      {% endif %}
+  {% endcase %}
+
+  {% if tour_input %}
+    <div class="wrapper tour-item-wrapper">
+      <div class="section-content">
+         <div class="grid--full grid--table tour-item-blank">
+           <div class="grid__item one-tenth small--two-tenths text-left">
+             <div class="tour-date">
+               <div class="date-day section-title"></div>
+               <div class="date-month section-title"></div>
+             </div>
+           </div>
+            <div class="grid__item seven-tenths small--eight-tenths">
+             <a class="ticket-link" href="" target="_blank">
+               <div class="event-location feature-copy"></div>
+               <div class="event-venue subheader"></div>
+             </a>
+           </div>
+            <div class="grid__item two-tenths text-right small--hide">
+             <a href="" target="_blank" class="subheader ticket-link">{{ 'homepage.tour.tour_ticket_link' | t }}</a>
+           </div>
+         </div>
+
+         <div class="grid--full grid--table tour-item-no-events">
+          <div class="grid__item">
+            <span class="feature-copy">{{ 'homepage.tour.tour_no_events' | t }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper button-wrapper">
+      <a href="" target="_blank" class="btn">{{ 'homepage.tour.tour_more_link' | t }}  <span class="next-arrow">{% include 'icon-forward' %}</span></a>
+    </div>
+  {% else %}
+    {% include 'onboarding-events' %}
+  {% endif %}
+{% else %}
+
+  {% comment %}
+  Custom Events
+  {% endcomment %}
+  <div class="wrapper tour-item-wrapper">
+    <div class="section-content">
+      {% for block in section.blocks %}
+       <div class="grid--full grid--table">
+         <div class="grid__item one-tenth small--two-tenths text-left">
+           <div class="tour-date">
+             <div class="date-day section-title">{% if block.settings.day < 10 %}0{% endif %}{{ block.settings.day }}</div>
+             <div class="date-month section-title">{{ block.settings.month | time_tag: format: 'month_abbr' , datetime: '%B' }}</div>
+           </div>
+         </div>
+          <div class="grid__item seven-tenths small--eight-tenths">
+           <a class="ticket-link" href="{{ block.settings.url }}" target="_blank">
+             <div class="event-location feature-copy">{{ block.settings.location }}</div>
+             <div class="event-venue subheader">{{ block.settings.venue }}</div>
+           </a>
+         </div>
+          <div class="grid__item two-tenths text-right small--hide">
+           <a href="{{ block.settings.url }}" target="_blank" class="subheader ticket-link">{{ 'homepage.tour.tour_ticket_link' | t }}</a>
+         </div>
+       </div>
+       {% endfor %}
+
+       <div class="grid--full grid--table tour-item-no-events">
+        <div class="grid__item">
+          <span class="feature-copy">{{ 'homepage.tour.tour_no_events' | t }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Tour and Events",
+  "class": "section-tour",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Tour"
+    },
+    {
+       "type": "paragraph",
+       "content": "Load events in from an external source, or add them manually below."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_max_events",
+      "label": "Enable max number of events"
+    },
+    {
+      "type":      "range",
+      "id":        "number_of_events",
+      "min":       5,
+      "max":        20,
+      "step":       1,
+      "label":     "Max number of events:",
+      "default":   5
+    },
+    {
+      "type": "header",
+      "content": "External Source"
+    },
+    {
+      "type": "select",
+      "id": "tour_source",
+      "label": "Source:",
+      "options": [
+        {
+          "value": "tour_songkick",
+          "label": "Songkick"
+        },
+        {
+          "value": "tour_bandsintown",
+          "label": "Bands In Town"
+        },
+        {
+          "value": "tour_eventbrite",
+          "label": "EventBrite"
+        }
+      ]
+    },
+    {
+       "type": "text",
+       "id": "songkick_artist_id",
+       "label": "Songkick artist ID"
+    },
+    {
+       "type": "text",
+       "id": "bandsintown_name",
+       "label": "Bands in town artist name"
+    },
+    {
+      "type": "header",
+      "content": "Eventbrite",
+      "info": "See: [Grab your Eventbrite Access Token](http://www.switchthemes.co/eventbrite)"
+    },
+    {
+       "type": "text",
+       "id": "eventbrite_access_token",
+       "label": "Access token"       
+    },
+    {
+       "type": "text",
+       "id": "eventbrite_organization_id",
+       "label": "Organization ID"
+    }
+  ],
+  "blocks" : [
+    {
+      "type": "text",
+      "name": "Event",
+      "settings": [
+        {
+            "type":      "range",
+            "id":        "day",
+            "min":       1,
+            "max":        31,
+            "step":       1,
+            "label":     "Day",
+            "default":   16
+        },
+        {
+           "type":      "select",
+           "id":        "month",
+           "label":     "Month",
+           "options": [
+             {
+               "value": "Jan",
+               "label": {
+                "en": "January",
+                "fr": "janvier",
+                "es": "enero",
+                "de": "Januar",
+                "pt-BR": "Janeiro",
+                "pt-PT": "Janeiro"
+               }
+             },
+             {
+               "value": "Feb",
+               "label": {
+                "en": "February",
+                "fr": "février",
+                "es": "febrero",
+                "de": "Februar",
+                "pt-BR": "Fevereiro",
+                "pt-PT": "Fevereiro"
+               }
+             },
+             {
+               "value": "Mar",
+               "label": {
+                "en": "March",
+                "fr": "mars",
+                "es": "marzo",
+                "de": "März",
+                "pt-BR": "Março",
+                "pt-PT": "Março"
+               }
+             },
+             {
+               "value": "Apr",
+               "label": {
+                "en": "April",
+                "fr": "avril",
+                "es": "abril",
+                "de": "April",
+                "pt-BR": "Abril",
+                "pt-PT": "Abril"
+               }
+             },
+             {
+               "value": "May",
+               "label": {
+                "en": "May",
+                "fr": "mai",
+                "es": "mayo",
+                "de": "Mai",
+                "pt-BR": "Maio",
+                "pt-PT": "Maio"
+               }
+             },
+             {
+               "value": "Jun",
+               "label": {
+                "en": "June",
+                "fr": "juin",
+                "es": "junio",
+                "de": "Juni",
+                "pt-BR": "Junho",
+                "pt-PT": "Junho"
+               }
+             },
+             {
+               "value": "Jul",
+               "label": {
+                "en": "July",
+                "fr": "julio",
+                "es": "enero",
+                "de": "Juli",
+                "pt-BR": "Julho",
+                "pt-PT": "Julho"
+               }
+             },
+             {
+               "value": "Aug",
+               "label": {
+                "en": "August",
+                "fr": "août",
+                "es": "agosto",
+                "de": "August",
+                "pt-BR": "Agosto",
+                "pt-PT": "Agosto"
+               }
+             },
+             {
+               "value": "Sep",
+               "label": {
+                "en": "September",
+                "fr": "septembre",
+                "es": "septiembre",
+                "de": "September",
+                "pt-BR": "Setembro",
+                "pt-PT": "Setembro"
+               }
+             },
+             {
+               "value": "Oct",
+               "label": {
+                "en": "October",
+                "fr": "octobre",
+                "es": "octubre",
+                "de": "Oktober",
+                "pt-BR": "Outubro",
+                "pt-PT": "Outubro"
+               }
+             },
+             {
+               "value": "Nov",
+               "label": {
+                "en": "November",
+                "fr": "novembre",
+                "es": "noviembre",
+                "de": "November",
+                "pt-BR": "Novembro",
+                "pt-PT": "Novembro"
+               }
+             },
+             {
+               "value": "Dec",
+               "label": {
+                "en": "December",
+                "fr": "décembre",
+                "es": "diciembre",
+                "de": "Dezember",
+                "pt-BR": "Dezembro",
+                "pt-PT": "Dezembro"
+               }
+             }
+           ],
+           "default":   "Jan"
+        },
+        {
+          "type":      "text",
+          "id":        "location",
+          "label":     "Location",
+          "default": "Location"
+        },
+        {
+          "type":      "text",
+          "id":        "venue",
+          "label":     "Venue",
+          "default": "Venue"
+        },
+        {
+          "type":      "url",
+          "id":        "url",
+          "label":     "Ticket URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tour and events",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

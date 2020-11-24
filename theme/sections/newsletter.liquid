@@ -1,0 +1,77 @@
+<!-- /sections/newsletter.liquid -->
+<section class="newsletter"  data-section-type="newsletter" data-section-id="{{ section.id }}">
+  <div class="wrapper">
+    {% unless section.settings.title == blank %}
+      <h2 class="section_title">
+        {{ section.settings.title }}
+        <div class="border"></div>
+      </h2>
+    {% endunless %}
+    {% unless section.settings.subheading == blank %}
+    <div class="grid section-content newsletter__subheading">
+       <div class="grid__item large--six-eighths push--large--one-eighth medium-down--one-whole feature-copy rte text-align--center">
+          {{ section.settings.subheading }}
+       </div>
+     </div>
+    {% endunless %}
+
+    <div class="grid section-content newsletter__form">
+       <div class="grid__item large--one-half push--large--one-quarter medium-down--one-whole text-align--center">
+
+         {% form 'customer' %}
+           {{ form.errors | default_errors }}
+           {% if form.posted_successfully? %}
+             <p class="form--success">{{ 'general.newsletter_form.confirmation' | t }}</p>
+           {% else %}
+             <div class="input-group">
+               <input type="hidden" name="contact[tags]" value="newsletter">
+               <input type="email"
+                 name="contact[email]"
+                 id="Email"
+                 class="input-group-field newsletter__input"
+                 value="{% if customer %}{{ customer.email }}{% endif %}"
+                 placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}"
+                 autocorrect="off"
+                 autocapitalize="off">
+               <span class="input-group-btn input-group-btn--newsletter">
+                 <button type="submit" class="btn newsletter__submit" name="commit" id="Subscribe">
+                   <span class="newsletter__submit-text--large">{{ 'general.newsletter_form.submit' | t }}</span>
+                 </button>
+               </span>
+             </div>
+           {% endif %}
+         {% endform %}
+       </div>
+     </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "class": "index-newsletter-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Subscribe to our newsletter"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "<p>A short sentence describing what someone will receive by subscribing</p>"
+      },
+      {
+        "type": "paragraph",
+        "content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"
+      }
+    ],
+    "presets": [{
+      "name": "Newsletter",
+      "category": "Promotional"
+    }],
+    "blocks" : []
+  }
+{% endschema %}

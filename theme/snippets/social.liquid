@@ -1,0 +1,145 @@
+<!-- /snippets/social.liquid -->
+{% assign extraClasses = '' %}
+
+{% if social_location == 'header' %}
+{% assign extraClasses =  'medium-down--hide' %}
+{% endif %}
+
+{% if heroImage %}
+{% assign extraClasses =  ' medium-down--show' %}
+{% endif %}
+
+{% if social_location == 'footer' %}
+{% assign extraClasses =  extraClasses | append: ' social-footer'  %}
+{% endif %}
+
+<ul class="social-list {{ extraClasses }}">
+
+  {% if settings.social_facebook_url != blank %}
+    <li>
+      <a href="{{ settings.social_facebook_url | escape }}" title="{{ shop.name }} on Facebook" target="_blank">
+        {% include 'icon-facebook' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_instagram_url != blank %}
+    <li>
+      <a href="{{ settings.social_instagram_url | escape }}" title="{{ shop.name }} on Instagram" target="_blank">
+        {% include 'icon-instagram' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_twitter_url != blank %}
+    <li>
+      <a href="{{ settings.social_twitter_url | escape }}" title="{{ shop.name }} on Twitter" target="_blank">
+        {% include 'icon-twitter' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_patreon_url != blank %}
+    <li>
+      <a href="{{ settings.social_patreon_url | escape }}" title="{{ shop.name }} on Patreon" target="_blank">
+        {% include 'icon-patreon' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_pinterest_url != blank %}
+    <li>
+      <a href="{{ settings.social_pinterest_url | escape }}" title="{{ shop.name }} on Pinterest" target="_blank">
+        {% include 'icon-pinterest' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_soundcloud_url != blank %}
+    <li>
+      <a href="{{ settings.social_soundcloud_url | escape }}" title="{{ shop.name }} on Soundcloud" target="_blank">
+        {% include 'icon-soundcloud' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_spotify_url != blank %}
+    <li>
+      <a href="{{ settings.social_spotify_url | escape }}" title="{{ shop.name }} on Spotify" target="_blank">
+        {% include 'icon-spotify' %}
+      </a>
+    </li>
+  {% endif %}
+
+   {% if settings.social_bandcamp_url != blank %}
+    <li>
+      <a href="{{ settings.social_bandcamp_url | escape }}" title="{{ shop.name }} on Bandcamp" target="_blank">
+        {% include 'icon-bandcamp' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_flickr_url != blank %}
+    <li>
+      <a href="{{ settings.social_flickr_url | escape }}" title="{{ shop.name }} on Flickr" target="_blank">
+        {% include 'icon-flickr' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_vimeo_url != blank %}
+    <li>
+      <a href="{{ settings.social_vimeo_url | escape }}" title="{{ shop.name }} on Vimeo" target="_blank">
+        {% include 'icon-vimeo' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_apple_url != blank %}
+    <li>
+      <a href="{{ settings.social_apple_url | escape }}" title="{{ shop.name }} on Apple" target="_blank">
+        {% include 'icon-apple' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_lastfm_url != blank %}
+    <li>
+      <a href="{{ settings.social_lastfm_url | escape }}" title="{{ shop.name }} on Last FM" target="_blank">
+        {% include 'icon-lastfm' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_youtube_url != blank %}
+    <li>
+      <a href="{{ settings.social_youtube_url | escape }}" title="{{ shop.name }} on YouTube" target="_blank">
+        {% include 'icon-youtube' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_tumblr_url != blank %}
+    <li>
+      <a href="{{ settings.social_tumblr_url | escape }}" title="{{ shop.name }} on Tumblr" target="_blank">
+        {% include 'icon-tumblr' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_triplej_url != blank %}
+    <li>
+      <a href="{{ settings.social_triplej_url | escape }}" title="{{ shop.name }} on Triple J" target="_blank">
+        {% include 'icon-triplej' %}
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_mixcloud_url != blank %}
+    <li>
+      <a href="{{ settings.social_mixcloud_url | escape }}" title="{{ shop.name }} on Mixcloud" target="_blank">
+        {% include 'icon-mixcloud' %}
+      </a>
+    </li>
+  {% endif %}
+</ul>

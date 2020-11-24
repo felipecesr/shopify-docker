@@ -1,0 +1,62 @@
+<!-- /snippets/header_hero-image.liquid -->
+
+<div class="header_hero-image feature-image {{ hero_image }} {{ section_class }} relative feature-image--{% if hero_image_style == 'full_screen' %}full_screen{% else %}content{% endif %}">
+
+    {% if hero_image_style == 'fit_content' %}
+      {% unless hero_image == '' or hero_image contains 'no-image' %}
+
+      {% capture img_id %}HeroImage{{ hero_image.id }}{% endcapture %}
+      {% capture wrapper_id %}HeroImageWrapper-{{ hero_image.id }}{% endcapture %}
+      {%- assign img_url = hero_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
+        <div style="padding-top:{{ 1 | divided_by: hero_image.aspect_ratio | times: 100}}%;">
+          <img id="{{ img_id }}"
+               class="resp-img feature-image__img-content lazyload"
+               src="{{ hero_image | img_url: '300x' }}"
+               data-src="{{ img_url }}"
+               data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
+               data-aspectratio="{{ hero_image.aspect_ratio }}"
+               data-sizes="auto"
+               alt="{{ hero_image.alt | escape }}">
+        </div>
+      </div>
+      <noscript>
+        <img src="{{ hero_image.src | img_url: 'large' }}" alt="{{ hero_image.alt | escape }}" class="feature-image__img-content">
+      </noscript>
+
+      {% endunless %}
+    {% endif %}
+
+   <div class="feature-image-inner lazyload"
+      {%- if hero_image -%}
+        {% if hero_image_style == 'full_screen' %}
+        data-bgset="{% include 'bgset', image: hero_image %}"
+        data-sizes="auto"
+        data-parent-fit="cover"
+        style="background-image: url('{{ hero_image | img_url: '300x300' }});"
+        {% endif %}
+      {% endif %}>
+
+     <div class="logo-hero-image grid--full grid--table">
+       <div class="grid__item">
+       {% include 'header_logo' %}
+       {% if section.settings.enable_social_icons_header %}
+       <div class="social-hero  ">
+       {% include 'social', social_location: 'header', heroImage: true %}
+       </div>
+       {% endif %}
+       </div>
+     </div>
+     <div class="arrow-holder">
+       <button class="arrow">
+         {% include 'icon-expand_more' %}
+       </button>
+     </div>
+
+  </div>
+
+  {% unless hero_image %}
+  <div class="feature-image__placeholder {% if hero_image_style == 'fit_content' %}feature-image__placeholder--fit{% endif %}">{{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+  {% endunless %}
+
+</div>

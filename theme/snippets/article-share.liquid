@@ -1,0 +1,27 @@
+<!-- /snippets/article-share.liquid -->
+{% capture article_url %}{{ shop.url }}{{ article.url }}{% endcapture %}
+{% capture tweet %}{{ article.title }}: {{ article_url }}{% endcapture %}
+<ul class="share-links no-bullets inline-list">
+  <li>
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ article_url }}" target="_blank" class="facebook">
+      <span class="socicon socicon-facebook"></span>
+    </a>
+  </li>
+  <li>
+    <a href="//twitter.com/intent/tweet?text={{ tweet | url_encode }}" target="_blank" class="twitter">
+      <span class="socicon socicon-twitter"></span>
+    </a>
+  </li>
+  {% if article.image %}
+  <li>
+    <a href="https://pinterest.com/pin/create/button/?url={{ article_url }}&media={{ article.image.src | img_url: 'large' }}&description={{ article.title }}" class="pinterest" target="_blank" >
+      <span class="socicon socicon-pinterest"></span>
+    </a>
+  </li>
+  {% endif %}
+  <li>
+    <a href="mailto:?&subject=Product Title&body={{ article_url }}" class="email" target="_blank" >
+      <span class="socicon socicon-email"></span>
+    </a>
+  </li>
+</ul>

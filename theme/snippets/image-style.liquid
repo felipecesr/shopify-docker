@@ -1,0 +1,73 @@
+{% comment %}
+  Make sure everything is a number
+{% endcomment %}
+{% assign height_limit = height | plus: 0.00 %}
+{% assign width_limit = width | plus: 0.00 %}
+{% assign image_height = image.height | plus: 0.00 %}
+{% assign image_width = image.width | plus: 0.00 %}
+
+{% unless img_id_class %}
+{% assign img_id_class = img_id %}
+{% endunless %}
+
+<style>
+  {% if image.aspect_ratio <= 1 %}
+    {% comment %} Portrait or square {% endcomment %}
+    {% assign max_width = height_limit | times: image.aspect_ratio %}
+    {% if image_height < height_limit %}
+      {% assign max_height = image_height %}
+      {% assign max_width = image_width %}
+    {% else %}
+      {% assign max_height = height_limit %}
+    {% endif %}
+  {% else %}
+  {% comment %} Landscape {% endcomment %}
+    {% assign max_height = width_limit | divided_by: image.aspect_ratio %}
+    {% if image_width < width_limit %}
+      {% assign max_height = image_height %}
+      {% assign max_width = image_width %}
+    {% else %}
+      {% assign max_width = width_limit %}
+    {% endif %}
+  {% endif %}
+
+  {% if small_style %}@media screen and (min-width: 591px) { {% endif %}
+    {%- if has_hover_image -%}
+    .hover-image-for-{{- img_id_class -}},
+    {% endif %}
+    .{{ img_id_class }} {
+      max-width: {{ max_width | round }}px;
+      max-height: {{ max_height | round }}px;
+    }
+    #{{ wrapper_id }} {
+      max-width: {{ max_width | round }}px;
+    }
+  {% if small_style %} } {% endif %}
+
+  {% if small_style %}
+    {% if image.aspect_ratio <= 1 %}
+      {% unless template.name == 'product' %}
+        {% assign max_width = 295 | times: image.aspect_ratio %}
+      {% else %}
+        {% assign max_width = 590 | times: image.aspect_ratio %}
+      {% endunless %}
+    {% else %}
+      {% if image_width < 590 %}
+        {% assign max_width = image_width %}
+      {% else %}
+        {% assign max_width = 590 %}
+      {% endif %}
+    {% endif %}
+    @media screen and (max-width: 590px) {
+      {%- if has_hover_image -%}
+      .hover-image-for-{{- img_id_class -}},
+      {% endif %}
+      .{{ img_id_class }} {
+        max-width: {{ max_width | round }}px;
+      }
+      #{{ wrapper_id }} {
+        max-width: {{ max_width | round }}px;
+      }
+    }
+  {% endif %}
+</style>

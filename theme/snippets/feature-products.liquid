@@ -1,0 +1,66 @@
+<!-- /snippets/feature-products.liquid -->
+{% comment %}
+  Use class grid-uniform to have evenly sized columns clear
+  each other properly at each breakpoint.
+{% endcomment %}
+{% assign onBoarding = false %}
+<section class="homepage-featured-products">
+
+  <div class="wrapper">
+    <h2 class="section_title">
+        {% if collection_1 and collection_1 != '' %}
+        {{ collections[selected_collection].title }}
+        {% else %}
+        {{ 'homepage.onboarding.collection_title' | t }}
+        {% endif %}
+      <div class="border"></div>
+    </h2>
+  </div>
+  
+  <div class="wrapper">
+   
+    <div class="grid-uniform product-grid section-content">
+    
+      {% comment %}
+        Loop through products in your Frontpage collection.
+        This collection is created by default, but you must add products to it.
+      {% endcomment %}
+      {% for product in collections[selected_collection].products limit:4 %}
+    
+        {% comment %}
+          Change the grid item width by using classes from the grid in
+          the grid_item_width variable.
+    
+          Example:
+            - {% assign grid_item_width = 'large--one-third medium--one-half' %}
+        {% endcomment %}
+        {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+        {% include 'product-grid-item' %}
+    
+      {% else %}
+      
+        {% assign onBoarding = true %}
+        {% comment %}
+          For onboarding new users to your theme, we add some default products and onboarding tutorials to help populate their store
+        {% endcomment %}
+        {% unless emptyState %}
+          {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+          {% assign emptyState = true %}
+        {% endunless %}
+    
+        {% include 'onboarding-featured-products' %}
+        
+      {% endfor %}
+    
+    </div>                
+  
+    {% if onBoarding == false %}
+      {% if collections[selected_collection].all_products_count > 4  %}
+      <div class="button-wrapper">
+        <a href="{{ collections[selected_collection].url }}" class="collection-view-all btn">{{ 'collections.general.all_of_collection' | t }} <span class="next-arrow">{% include 'icon-forward' %}</span></a>
+      </div>
+      {% endif %}
+    {% endif %}
+    
+  </div>
+</section>

@@ -1,0 +1,173 @@
+<!-- /snippets/drawers.liquid -->
+<div id="NavDrawer" class="drawer drawer--left"  data-section-type="sidebar-menu" data-section-id="{{ section.id }}">
+  <div class="drawer__container">
+  <div class="drawer__header">
+      <button type="button" class="js-drawer-close">
+        <span>{% include 'icon-close' %}</span>
+        <span class="menu-text"> {{ 'layout.drawers.close_menu' | t }}</span>
+      </button>
+      <div class="h1 site-header__logo {% unless settings.logo_use_image %} text-active {% endunless %}">
+        {% capture image_size %}{{ section.settings.logo_max_width | escape }}x{% endcapture %}
+        {% capture image_size_px %}{{ section.settings.logo_max_width | escape }}px{% endcapture %}
+        {% capture image_size_2x %}{{ section.settings.logo_max_width | times: 2 }}x{% endcapture %}
+        {% if section.settings.logo %}
+          <a href="{{ routes.root_url }}" class="site-header__logo-link">
+            <img src="{{ section.settings.logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+          </a>
+        {% else %}
+          <a href="{{ routes.root_url }}">{{ shop.name }}</a>
+        {% endif %}
+      </div>
+  </div>
+  <!-- begin mobile-nav -->
+  <nav>
+    <ul class="drawer-nav">
+
+      {% for link in linklists[section.settings.main_linklist].links %}
+        {% if link.links != blank %}
+          <li class="drawer-nav__item feature-copy{% if link.active %} drawer-nav__item--active{% endif %}" aria-haspopup="true">
+            <div class="drawer-nav__has-sublist">
+              <a class="drawer-nav__link mobile-nav__toggle">{{ link.title }}
+                {% include 'icon-expand_more' %}
+                {% include 'icon-expand_less' %}
+              </a>
+            </div>
+            {% assign sub_nav_length = link.links.size %}
+            {% assign large_class = '' %}
+            {% if sub_nav_length > 10 %}
+            {% assign large_class = 'large-sublist' %}
+            {% endif %}
+            <ul class="drawer-nav__sublist {{ large_class }}">
+              {% for childlink in link.links %}
+
+                {% if childlink.links != blank %}
+
+                <li class="drawer-nav__item {% if link.active %} drawer-nav__item--active{% endif %}" aria-haspopup="true">
+                  <div class="drawer-nav--child__has-sublist">
+                    <a class="drawer-nav__link mobile-nav__toggle"><span>&#151;</span> {{ childlink.title }}
+                      {% include 'icon-expand_more' %}
+                      {% include 'icon-expand_less' %}
+                    </a>
+                  </div>
+                  {% assign sub_nav_length = childlink.links.size %}
+                  {% assign large_class = '' %}
+                  {% if sub_nav_length > 10 %}
+                  {% assign large_class = 'large-sublist' %}
+                  {% endif %}
+                  <ul class="drawer-nav__sublist {{ large_class }}">
+                    {% for childchildlink in childlink.links %}
+                      <li class="drawer-nav__item {% if childchildlink.active %} drawer-nav__item--active{% endif %}">
+                        <a href="{{ childchildlink.url }}" class="drawer-nav__link drawer-nav__link--child">{{ childchildlink.title | escape }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% else %}
+                  <li class="drawer-nav__item {% if childlink.active %} drawer-nav__item--active{% endif %}">
+                    <a href="{{ childlink.url }}" class="drawer-nav__link"><span>&#151;</span> {{ childlink.title | escape }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li class="drawer-nav__item feature-copy{% if link.active %} drawer-nav__item--active{% endif %}">
+            <a href="{{ link.url }}" class="drawer-nav__link">{{ link.title }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %}
+        If customer accounts are enabled, provide login and create account links
+      {% endcomment %}
+      {% if shop.customer_accounts_enabled %}
+        {% if customer %}
+          <li class="drawer-nav__item customer-item first">
+            {% if customer.first_name != blank %}
+              {% capture first_name %}{{ customer.first_name }}{% endcapture %}
+              <a href="{{ routes.account_url }}">{{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}</a>
+            {% else %}
+              <a href="{{ routes.account_url }}">{{ 'layout.customer.account' | t }}</a>
+            {% endif %}
+          </li>
+          <li class="drawer-nav__item customer-item">
+            {{ 'layout.customer.log_out' | t | customer_logout_link }}
+          </li>
+        {% else %}
+          <li class="drawer-nav__item customer-item first">
+            {{ 'layout.customer.log_in' | t | customer_login_link }}
+          </li>
+          {% if shop.customer_accounts_optional %}
+          <li class="drawer-nav__item customer-item">
+            {{ 'layout.customer.create_account' | t | customer_register_link }}
+          </li>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </ul>
+  </nav>
+
+  {% if section.settings.show_search %}
+  <div class="draw-nav__search">
+    {% include 'search-bar' %}
+  </div>
+  {% endif %}
+
+
+
+  {% if section.settings.show_social %}
+    <div class="drawer-social">
+      {% include 'social' %}
+    </div>
+  {% endif %}
+
+
+
+  </div><!-- drawer nav container -->
+  <!-- //drawer-nav -->
+</div>
+
+{% schema %}
+  {
+    "name": "Sidebar Menu",
+    "class": "sidebar-menu",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "main_linklist",
+        "label": "Menu",
+        "default": "main-menu"
+      },
+      {
+        "type": "header",
+        "content": "Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Custom logo",
+        "info": "800 x 300px recommended."
+      },
+      {
+        "type":      "range",
+        "id":        "logo_max_width",
+        "min":       80,
+        "max":        270,
+        "step":       10,
+        "unit":       "px",
+        "label":     "Custom logo width",
+        "default":   270
+      },
+      {
+        "type": "checkbox",
+        "id": "show_search",
+        "label": "Show search"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "label": "Show social icons"
+      }
+    ]
+  }
+{% endschema %}

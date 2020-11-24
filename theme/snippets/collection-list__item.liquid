@@ -1,0 +1,42 @@
+  <a href="{{ shop.url }}{{ selected_collection.url }}" >
+    <div class="content">
+      <div class="grid--full grid--table">
+        <div class="grid__item">
+          <div class="feature-copy-holder with-cta">
+            <h3 class="feature-image-overlay">
+                {{ selected_collection.title }}
+            </h3>
+          </div>
+          <div class="feature-image-cta btn">{{ cta_text | escape }} <span class="next-arrow">{% include 'icon-forward' %}</span></div>
+        </div>
+      </div>
+    </div>
+
+    {% if selected_collection.image %}
+      {% assign collection_image = selected_collection.image  %}
+    {% else %}
+      {% for product in selected_collection.products limit:1 %}
+        {% assign collection_image = product.featured_image.src  %}
+      {% endfor %}
+    {% endif %}
+
+    {% capture img_id %}CollectionImage-{{ collection_image.id }}{% endcapture %}
+    {% capture wrapper_id %}CollectionImageWrapper-{{ collection_image.id }}{% endcapture %}
+    {%- assign img_url = collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+    <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
+      <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;">
+        <img id="{{ img_id }}"
+             class="resp-img lazyload"
+             src="{{ collection_image | img_url: '300x' }}"
+             data-src="{{ img_url }}"
+             data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
+             data-aspectratio="{{ collection_image.aspect_ratio }}"
+             data-sizes="auto"
+             alt="{{ collection_image.alt | escape }}">
+      </div>
+    </div>
+    <noscript>
+      <img src="{{ collection_image.src | img_url: 'large' }}" alt="{{ collection_image.alt | escape }}">
+    </noscript>
+
+  </a>

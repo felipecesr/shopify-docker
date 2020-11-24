@@ -1,0 +1,23 @@
+<!-- /snippets/customer_login-logout.liquid -->
+<ul class="no-bullets inline-list secondary custom__login-logout">
+{% if customer %}
+   <li class="mobile-nav__item">
+    {% if customer.first_name != blank %}
+      {% capture first_name %}<a href="{{ routes.account_url }}">{{ customer.first_name }}</a>{% endcapture %}
+      {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
+    {% else %}
+      <a href="{{ routes.account_url }}">{{ 'layout.customer.account' | t }}</a>
+    {% endif %}
+  </li>
+  <li>
+    <span aria-hidden="true">/</span>
+  </li>
+  <li class="mobile-nav__item">
+    {{ 'layout.customer.log_out' | t | customer_logout_link }}
+  </li>
+{% else %}
+  <li class="mobile-nav__item">
+    {{ 'layout.customer.create_account' | t | customer_register_link }}
+  </li>
+{% endif %}
+</ul>

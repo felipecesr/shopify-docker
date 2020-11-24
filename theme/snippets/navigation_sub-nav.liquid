@@ -1,0 +1,62 @@
+<!-- /snippets/navigation_sub-nav.liquid -->
+<!-- sub links -->
+{% for link in linklists[section.settings.main_linklist].links %}
+  {% if link.links != blank %}
+      <ul class="inline-list child-nav feature-copy child-list-{{ link.handle }}">
+        {% for childlink in link.links %}
+          {% if childlink.links != blank %}
+          <li class="site-nav--has-dropdown site-nav--has-dropdown-child{% if link.active %} site-nav--active{% endif %}" data-list="{{ childlink.handle }}" aria-haspopup="true">
+            <a class="site-nav__link">
+              {{ childlink.title }}
+              {% include 'icon-expand_more' %}
+              {% include 'icon-expand_less' %}
+            </a>
+          </li>
+          {% else %}
+          <li{% if childlink.active %} class="site-nav--active"{% endif %}>
+            <a href="{{ childlink.url }}" class="site-nav__link">{{ childlink.title | escape }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+  {% else %}
+  {% endif %}
+{% endfor %}
+
+
+<!-- user -->
+{% comment %}
+  If customer accounts are enabled, provide login and create account links
+{% endcomment %}
+{% if shop.customer_accounts_enabled %}
+  <ul class="inline-list child-nav child-list-customer">
+  {% if customer %}
+    <li class="customer-item first">
+      {% if customer.first_name != blank %}
+        {% capture first_name %}{{ customer.first_name }}{% endcapture %}
+        <a href="{{ routes.account_url }}">{{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}</a>
+      {% else %}
+        <a href="{{ routes.account_url }}">{{ 'layout.customer.account' | t }}</a>
+      {% endif %}
+    </li>
+    <li class="customer-item">
+      {{ 'layout.customer.log_out' | t | customer_logout_link }}
+    </li>
+  {% else %}
+    <li class="customer-item first">
+      {{ 'layout.customer.log_in' | t | customer_login_link }}
+    </li>
+    {% if shop.customer_accounts_optional %}
+    <li class="customer-item">
+      {{ 'layout.customer.create_account' | t | customer_register_link }}
+    </li>
+    {% endif %}
+  {% endif %}
+  </ul>
+{% endif %}
+
+{% if section.settings.header_show_search_icon %}
+<div class="sub-nav-search child-list-search">
+    {% include 'search-bar' %}
+</div>
+{% endif %}
