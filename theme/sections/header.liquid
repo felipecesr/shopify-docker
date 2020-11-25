@@ -10,6 +10,7 @@
   {% assign hero_image = block.settings.hero_image  %}
   {% assign hero_image_style = block.settings.hero_image_style %}
   {% capture custom_height %}{{ block.settings.custom_hero_height | escape }}px{% endcapture %}
+  {% assign hero_video = block.settings.hero_video %}
 
   {% if block.settings.logo_max_width_hero != '' %}
     {% assign logo_hero_max_width = block.settings.logo_max_width_hero | escape %}
@@ -185,6 +186,11 @@
   {% if hero_image_active and template == 'index' %}
   </div> <!-- end additional wrapper for header content -->
     {% include 'header_hero-image' %}
+  {% endif %}
+
+  {% if hero_video and template == 'index' %}
+    <h1>{{ hero_video.type }}</h1>
+    {% include 'header_video' %}
   {% endif %}
 
 </header>
@@ -387,6 +393,12 @@
             }
           ],
           "info": "Use \'Content\' style if you want to avoid image cropping."
+        },
+        {
+          "type": "text",
+          "id": "hero_video",
+          "label": "Video",
+          "info": "text"
         },
         {
           "type": "image_picker",
