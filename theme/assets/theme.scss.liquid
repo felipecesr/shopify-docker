@@ -8307,3 +8307,24 @@ section.collection-page {
 .template-index .site-header__logo {
   display: none !important;
 }
+
+.template-index .hero-active--video {
+  position: relative;
+  overflow: hidden;
+
+  .video-wrapper {
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100vh;
+    min-width: 177.77vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+
+    iframe[src] {
+      pointer-events: none !important;
+    }
+  }
+}
