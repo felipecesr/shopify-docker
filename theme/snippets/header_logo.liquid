@@ -6,7 +6,7 @@
 
 {% if template == 'index' %}
 
-  <h1 class="site-header__logo {% unless section.settings.logo %} text-active {% endunless %}">
+  <h1 class="h1--hero site-header__logo {% unless section.settings.logo %} text-active {% endunless %}">
 
 {% else %}
 
@@ -14,30 +14,9 @@
 
 {% endif %}
 
-  {% if section.settings.logo %}
-    <a href="{{ routes.root_url }}" class="site-header__logo-link">
-
-      {% capture image_size %}{{ section.settings.logo_max_width | escape }}x{% endcapture %}
-      {% capture image_size_px %}{{ section.settings.logo_max_width | escape }}px{% endcapture %}
-      {% capture image_size_2x %}{{ section.settings.logo_max_width | times: 2 }}x{% endcapture %}
-
-      {% if hero_image_active and template == 'index' and logo_hero_max_width != '' %}
-      {% capture image_size %}{{ logo_hero_max_width }}x{% endcapture %}
-      {% capture image_size_px %}{{ logo_hero_max_width | escape }}px{% endcapture %}
-      {% capture image_size_2x %}{{ logo_hero_max_width | times: 2 }}x{% endcapture %}
-      {% endif %}
-
-      {% if if_alternate_logo and template == 'index' %}
-        <img src="{{ alternate_logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
-      {% else %}
-        <img src="{{ section.settings.logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
-      {% endif %}
-    </a>
-  {% else %}
   {% capture title_size %}{{ shop.name | size }}{% endcapture %}
   {% assign title_size_count = title_size | plus: 0 %}
-    <a href="{{ routes.root_url }}" class="{% if title_size_count > 20 %}large-title{% endif %} {% if title_size_count < 7 %}small-title{% endif %}">{{ shop.name }}</a>
-  {% endif %}
+  <a href="{{ routes.root_url }}" class="{% if title_size_count > 20 %}large-title{% endif %} {% if title_size_count < 7 %}small-title{% endif %}">{{ shop.name }}</a>
 
 {% if template == 'index' %}
   {% if settings.enable_hero_image and settings.logo_use_image == false %}

@@ -8304,13 +8304,26 @@ section.collection-page {
 /*============================================================================
   #Custom
 ==============================================================================*/
-.template-index .site-header__logo {
-  display: none !important;
+.btn--header {
+  padding: ($gutter / 2) ($gutter / 2) (($gutter / 2) + 1);
+}
+
+.header_hero-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin: 58px auto 0;
+  max-width: 630px;
 }
 
 .template-index .hero-active--video {
   position: relative;
   overflow: hidden;
+  background-color: #000;
+
+  .feature-image-inner {
+    background-image: none !important;
+  }
 
   .video-wrapper {
     width: 100vw;
@@ -8320,11 +8333,18 @@ section.collection-page {
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 1;
     transform: translate(-50%, -50%);
 
     iframe[src] {
       pointer-events: none !important;
     }
+  }
+}
+
+@include at-query ($min, $medium){
+  .template-index .h1--hero {
+    font-size: 72px;
+    line-height: 84px;
+    max-width: 8em;
   }
 }
