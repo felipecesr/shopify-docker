@@ -1,3 +1,10 @@
+<h1 class="h1--hero site-header__logo {% unless section.settings.logo %} text-active {% endunless %}">
+    {% capture title_size %}{{ shop.name | size }}{% endcapture %}
+    {% assign title_size_count = title_size | plus: 0 %}
+    <a href="{{ routes.root_url }}" class="{% if title_size_count > 20 %}large-title{% endif %} {% if title_size_count < 7 %}small-title{% endif %}">{{ shop.name }}</a>
+</h1>
+  
+
 <div class="header_hero-buttons">
     <a href="#" class="btn btn--header">Social</a>
     <a href="#" class="btn btn--header">Bottles</a>

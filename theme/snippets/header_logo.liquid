@@ -4,28 +4,15 @@
   Site name gets precedence with H1 tag on homepage, div on other pages.
 {% endcomment %}
 
-{% if template == 'index' %}
-
-  <h1 class="h1--hero site-header__logo {% unless section.settings.logo %} text-active {% endunless %}">
-
-{% else %}
-
-  <div class="h1 site-header__logo {% unless section.settings.logo %} text-active {% endunless %}">
-
-{% endif %}
-
-  {% capture title_size %}{{ shop.name | size }}{% endcapture %}
-  {% assign title_size_count = title_size | plus: 0 %}
-  <a href="{{ routes.root_url }}" class="{% if title_size_count > 20 %}large-title{% endif %} {% if title_size_count < 7 %}small-title{% endif %}">{{ shop.name }}</a>
-
-{% if template == 'index' %}
-  {% if settings.enable_hero_image and settings.logo_use_image == false %}
-  <div class="hero-logo-border">
-    <div class="inner"></div>
-  </div>
+<div class="h1 site-header__logo {% unless settings.logo_use_image %} text-active {% endunless %}">
+  {% capture image_size %}{{ section.settings.logo_max_width | escape }}x{% endcapture %}
+  {% capture image_size_px %}{{ section.settings.logo_max_width | escape }}px{% endcapture %}
+  {% capture image_size_2x %}{{ section.settings.logo_max_width | times: 2 }}x{% endcapture %}
+  {% if section.settings.logo %}
+    <a href="{{ routes.root_url }}" class="site-header__logo-link">
+      <img src="{{ section.settings.logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+    </a>
+  {% else %}
+    <a href="{{ routes.root_url }}">{{ shop.name }}</a>
   {% endif %}
-  </h1>
-{% else %}
-
-  </div>
-{% endif %}
+</div>

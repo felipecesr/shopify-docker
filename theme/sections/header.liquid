@@ -148,9 +148,8 @@
             {% endif %}
 
             {% if hero_image_active and template == 'index' %}
-              {% assign menu-nav_classes = "large--two-thirds"  %}
+              {% assign menu-nav_classes = "large--one-third"  %}
               {% assign cart_classes = "large--one-third"  %}
-              {% assign site-title_classes = "large--hide" %}
             {% endif %}
 
         {% endif %}
@@ -163,9 +162,7 @@
         </div><!-- end navigation / drawer -->
 
         <div class="grid__item {{ site-title_classes }}  medium-down--six-eighths text-center site-title_container">
-          {% unless hero_image_active and template == 'index' %}
           {% include 'header_logo' %}
-          {% endunless %}
         </div> <!-- end logo -->
 
         <div class="grid__item {{ cart_classes }}  medium-down--one-eighth text-right header-meta">
