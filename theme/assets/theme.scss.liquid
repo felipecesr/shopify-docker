@@ -8312,6 +8312,16 @@ section.collection-page {
   text-align: center !important;
 }
 
+.hero-image-header-wrap {
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color .2s ease-out;
+}
+
+.hero-header-fixed {
+  position: fixed !important;
+  background-color: rgba(0, 0, 0, 1);
+}
+
 .btn--header {
   padding: ($gutter / 2) ($gutter / 2) (($gutter / 2) + 1);
 }
@@ -8328,6 +8338,7 @@ section.collection-page {
   position: relative;
   overflow: hidden;
   background-color: #000;
+  z-index: 3;
 
   .feature-image-inner {
     background-image: none !important;
