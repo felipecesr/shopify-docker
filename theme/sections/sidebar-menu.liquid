@@ -11,8 +11,8 @@
         {% capture image_size_px %}{{ section.settings.logo_max_width | escape }}px{% endcapture %}
         {% capture image_size_2x %}{{ section.settings.logo_max_width | times: 2 }}x{% endcapture %}
         {% if section.settings.logo %}
-          <a href="{{ routes.root_url }}" class="site-header__logo-link">
-            <img src="{{ section.settings.logo | img_url: image_size_2x }}" alt="{{ shop.name }}" width="{{ image_size }}">
+          <a href="{{ routes.root_url }}" class="site-header__logo-link display-block text-center">
+            <img src="{{ section.settings.logo | img_url: image_size_2x }}" alt="{{ shop.name }}">
           </a>
         {% else %}
           <a href="{{ routes.root_url }}">{{ shop.name }}</a>
