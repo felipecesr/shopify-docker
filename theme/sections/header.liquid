@@ -34,9 +34,9 @@
 {% endif %}
 
 {% assign hero_video = section.settings.hero_video %}
-{% unless hero_video == "" %}
+{% if hero_video != "" and template == 'index' %}
   {% assign extraClasses = extraClasses | append: ' hero-active--video' %}
-{% endunless %}
+{% endif %}
 
 
 {% assign border_class = '' %}
