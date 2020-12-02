@@ -6,7 +6,7 @@
   
 
 <div class="header_hero-buttons">
-    <a href="#" class="btn btn--header">Social</a>
-    <a href="#" class="btn btn--header">Bottles</a>
-    <a href="#" class="btn btn--header">General</a>
+    {% for link in linklists[section.settings.hero_buttons].links %}
+        <a href="{{ link.url }}" class="btn btn--header">{{ link.title }}</a>
+    {% endfor %}
 </div>

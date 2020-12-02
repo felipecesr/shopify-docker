@@ -189,9 +189,9 @@
     {% include 'header_hero-image' %}
   {% endif %}
 
-  {% unless hero_video == "" and template == 'index' %}
+  {% if hero_video != "" and template == 'index' %}
     {% include 'header_video' %}
-  {% endunless %}
+  {% endif %}
 
 </header>
 
@@ -373,9 +373,22 @@
       "default": "#ffffff"
     },
     {
+      "type": "header",
+      "content": "Background video"
+    },
+    {
       "type": "text",
       "id": "hero_video",
-      "label": "Video"
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Hero buttons"
+    },
+    {
+      "type": "link_list",
+      "id": "hero_buttons",
+      "label": "Menu"
     }
   ],
   "blocks": [
