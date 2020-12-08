@@ -8368,10 +8368,22 @@ section.collection-page {
   }
 }
 
-@include at-query ($min, $medium){
+@include at-query ($min, $medium) {
   .template-index .h1--hero {
     font-size: 72px;
     line-height: 84px;
     max-width: 8em;
+  }
+
+  .page .page-title {
+    width: 1320px;
+    margin: 0 auto 22px;
+  }
+
+  .page .feature-copy img {
+    max-width: 1320px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
