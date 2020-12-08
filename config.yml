@@ -3,4 +3,8 @@ development:
   theme_id: ${DEV_THEMEID}
   store: ${DEV_SHOP}
   directory: theme
-  
+production:
+  password: ${PROD_PASSWD}
+  theme_id: ${PROD_THEMEID}
+  store: ${PROD_SHOP}
+  directory: theme
