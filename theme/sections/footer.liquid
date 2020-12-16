@@ -39,7 +39,7 @@
 
 <!-- classes for nav, social and newsletter -->
 {% if section.settings.footer_newsletter_enable and section.settings.enable_social_icons_footer %}
-{% assign footer_nav_classes = 'large--six-twelfths medium--one-whole' %}
+{% assign footer_nav_classes = 'large--eight-twelfths medium--one-whole' %}
 {% assign footer_newsletter_classes = 'large--four-twelfths desktop-down--one-half medium--one-whole' %}
 {% assign footer_social_classes = 'large--two-twelfths desktop-down--one-half medium--one-whole' %}
 {% endif %}
@@ -110,15 +110,13 @@
               {% endif %}
             {% endform %}
           {% endif %}
-          </div>
-        {% endif %}
 
-
-
-        {% if section.settings.enable_social_icons_footer %}
-          <div class="grid__item {{ footer_social_classes }}  footer-grid-social">
-            <h3 class="secondary">{{ 'layout.footer.social_title' | t }}</h3>
-            {% include 'social', social_location: 'footer' %}
+          {% if section.settings.enable_social_icons_footer %}
+            <div class="footer__social-block">
+              <h3 class="secondary">{{ 'layout.footer.social_title' | t }}</h3>
+              {% include 'social', social_location: 'footer' %}
+            </div>
+          {% endif %}
           </div>
         {% endif %}
 
