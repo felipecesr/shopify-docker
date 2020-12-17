@@ -39,7 +39,7 @@
 
 <!-- classes for nav, social and newsletter -->
 {% if section.settings.footer_newsletter_enable and section.settings.enable_social_icons_footer %}
-{% assign footer_nav_classes = 'large--eight-twelfths medium--one-whole' %}
+{% assign footer_nav_classes = 'large--two-twelfths medium--one-whole' %}
 {% assign footer_newsletter_classes = 'large--four-twelfths desktop-down--one-half medium--one-whole' %}
 {% assign footer_social_classes = 'large--two-twelfths desktop-down--one-half medium--one-whole' %}
 {% endif %}
@@ -56,13 +56,14 @@
         <hr class="border-top {% if section.settings.footer_show_top_border == false %}border-top--none{% endif %}">
 
         <div class="grid footer-top-row">
+        {% for block in section.blocks %}
           <div class="grid__item {{ footer_nav_classes }} footer-grid-nav">
             <!-- begin site-nav -->
 
-            <h3 class="secondary">{{ 'layout.footer.navigation_title' | t }}</h3>
+            <h3 class="secondary">{{ block.settings.footer_linklist_title }}</h3>
 
             <ul class="footer-nav" id="AccessibleNav">
-              {% for link in linklists[section.settings.footer_linklist].links %}
+              {% for link in linklists[block.settings.footer_linklist].links %}
               <li {% if link.active %}class="site-nav--active"{% endif %}>
                 <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
               </li>
@@ -70,6 +71,7 @@
             </ul>
             <!-- //site-nav -->
           </div>
+        {% endfor %}
 
         {% if section.settings.footer_newsletter_enable %}
           <div class="grid__item {{ footer_newsletter_classes }} footer-newsletter footer-grid-newsletter">
@@ -210,14 +212,29 @@
 {% schema %}
 {
   "name": "Footer",
-  "settings": [
+  "blocks": [
     {
-      "type": "link_list",
-      "id": "footer_linklist",
-      "label": "Menu",
-      "default": "footer",
-      "info": "This menu won't show dropdown items"
-    },
+      "type": "footer_linklists",
+      "name": "Navigations",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "footer_linklist_title",
+          "label": "Title",
+          "default": "Navigation"
+        },
+        {
+          "type": "link_list",
+          "id": "footer_linklist",
+          "label": "Menu",
+          "default": "footer",
+          "info": "This menu won't show dropdown items"
+        }
+      ]
+    }
+  ],
+  "settings": [
     {
       "type": "checkbox",
       "id": "footer_newsletter_enable",
