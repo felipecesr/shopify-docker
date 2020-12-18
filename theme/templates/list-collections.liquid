@@ -9,6 +9,13 @@
 
 {% endcomment %}
 
+{% unless width %}
+  {%- assign width = 128 -%}
+{% endunless %}
+{% unless height %}
+  {%- assign height = 195 -%}
+{% endunless %}
+
 {% include 'breadcrumb' %}
 
 
@@ -29,7 +36,7 @@
   {% unless collection.handle == 'frontpage' %}
 
     {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
-    <div class="grid__item large--one-third medium--one-half">
+    <div class="grid__item large--one-fifth medium--one-half">
       <a class="product-grid-link" href="{{ collection.url }}">
         {% if collection.image %}
         <div class="grid__image">
@@ -62,8 +69,24 @@
           {% capture img_id %}CollectionImage-{{ collection_image.id }}{% endcapture %}
           {% capture wrapper_id %}CollectionImageWrapper-{{ collection_image.id }}{% endcapture %}
           {%- assign img_url = collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+          {% assign has_hover_image = false %}
+          {% if product.media.size > 1 and settings.products_show_second_image_on_hover %}
+            {% assign has_hover_image = true %}
+          {% endif %}
+
           <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
             <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;">
+              
+              {% include 'image-style' with image: product.featured_media.preview_image,
+                width: width,
+                height: height,
+                small_style: false,
+                wrapper_id: wrapper_id,
+                img_id: img_id,
+                has_hover_image: has_hover_image,
+              %}
+              
               <img id="{{ img_id }}"
                    class="resp-img lazyload"
                    src="{{ collection_image | img_url: '300x' }}"
@@ -85,12 +108,6 @@
         <p class="h6">
           <span class="product-grid-title">{{ collection.title }}</span>
         </p>
-
-        {% if collection.description %}
-        <p class="info ">
-          {{ collection.description | strip_html | truncatewords: 20, "..."  }}
-        </p>
-        {% endif %}
       </a>
     </div>
   {% endunless %}
