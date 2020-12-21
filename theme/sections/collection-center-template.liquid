@@ -1,0 +1,129 @@
+{% comment %}
+
+  For more information on collection tags:
+    - http://docs.shopify.com/themes/liquid-variables/collection
+
+{% endcomment %}
+
+{% paginate collection.products by section.settings.no_posts %}
+
+{% comment %}
+{% include 'breadcrumb' %}
+{% endcomment %}
+
+{% comment %}
+  Use .grid--rev so that the collection tags appear below the products on mobile
+{% endcomment %}
+
+<section class="collection-page" data-section-type="collection" data-section-id="{{ section.id }}">
+  <header class="grid collection-header">
+    <div class="grid__item large--two-thirds push--large--one-sixth page-item">
+      <h1 class="standard-index text-center {% if collection.description != blank %}has-description{% endif %}">{{ collection.title }}</h1>
+      {% if collection.description != blank %}
+      <div class="rte rte--header collection-description feature-copy">
+        {{ collection.description }}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  {% comment %}
+    Use class grid-uniform to have evenly sized columns clear
+    each other properly at each breakpoint.
+  {% endcomment %}
+  <div class="grid-uniform product-grid">
+
+    {% comment %}
+      Loop through our products in the current collection.
+      See the snippet 'product-grid-item' for the layout.
+    {% endcomment %}
+    {% for product in collection.products %}
+      {% include 'product-grid-item' %}
+
+    {% else %}
+
+      {% if collection.handle == 'all' and current_tags == '' %}
+        {% comment %}
+          Add default products to help with onboarding for collections/all only
+        {% endcomment %}
+        {% unless emptyState %}
+          {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+          {% assign emptyState = true %}
+        {% endunless %}
+        {% include 'onboarding-empty-collection' %}
+      {% else %}
+        {% comment %}
+          If collection exists but is empty, display message
+        {% endcomment %}
+        <div class="grid__item">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+      {% endif %}
+
+    {% endfor %}
+
+  </div>
+
+  {% if paginate.pages > 1 %}
+    <div class="pagination secondary grid--table">
+      <div class="grid__item one-quarter text-left">
+        {% if paginate.previous.is_link %}
+          <a href="{{ paginate.previous.url }}" class="previous-paginate">
+            <span class="prev-arrow">{% include 'icon-back' %}</span>
+            <span class="small--hide">{{ paginate.previous.title | replace: '&laquo;', '' }}</span>
+          </a>
+      {% endif %}
+      </div>
+
+      <div class="grid__item small--hide">
+        {{ 'collections.pagination.item_count_label' | t }} {{ paginate.current_offset | plus: 1 }}-{% if paginate.next %}{{ paginate.current_offset | plus: paginate.page_size }}{% else %}{{ paginate.items }}{% endif %} of {{ paginate.items }}.
+      </div>
+
+      <div class="grid__item one-quarter text-right">
+        {% if paginate.next.is_link %}
+            <a href="{{ paginate.next.url }}" class="next-paginate">
+                <span class="small--hide">{{ paginate.next.title | replace: '&raquo;', '' }}</span class="small--hide">
+                <span class="next-arrow">{% include 'icon-forward' %}</span>
+            </a>
+        {% endif %}
+      </div>
+
+    </div>
+  {% endif %}
+
+{% endpaginate %}
+
+</section>
+
+{% schema %}
+  {
+    "name": "Collection pages",
+    "class": "collection-template",
+    "settings": [
+      {
+         "type":      "range",
+         "id":        "no_posts",
+         "min":       4,
+         "max":        48,
+         "step":       4,
+         "label":     "No of products per page",
+         "default":   12
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_tag_filter",
+        "label": "Enable filtering by product tag"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_sort_filter",
+        "label": "Enable collection sorting"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show vendor"
+      }
+    ]
+  }
+{% endschema %}
