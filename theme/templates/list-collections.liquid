@@ -47,18 +47,18 @@
           {% capture img_id %}CollectionImage-{{ collection_image.id }}{% endcapture %}
           {% capture wrapper_id %}CollectionImageWrapper-{{ collection_image.id }}{% endcapture %}
           {%- assign img_url = collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
-          <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
-            <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;">
+          <!-- <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
+            <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;"> -->
               <img id="{{ img_id }}"
-                   class="resp-img lazyload"
+                   class="resp-img lazyload custom-product-image"
                    src="{{ collection_image | img_url: '300x' }}"
                    data-src="{{ img_url }}"
                    data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
                    data-aspectratio="{{ collection_image.aspect_ratio }}"
                    data-sizes="auto"
                    alt="{{ collection_image.alt | escape }}">
-            </div>
-          </div>
+            <!-- </div>
+          </div> -->
           <noscript>
             <img src="{{ collection_image.src | img_url: 'large' }}" alt="{{ collection_image.alt | escape }}">
           </noscript>
@@ -77,28 +77,18 @@
             {% assign has_hover_image = true %}
           {% endif %}
 
-          <div id="{{ wrapper_id }}" class="resp-img-wrapper js">
-            <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;">
-              
-              {% include 'image-style' with image: product.featured_media.preview_image,
-                width: width,
-                height: height,
-                small_style: false,
-                wrapper_id: wrapper_id,
-                img_id: img_id,
-                has_hover_image: has_hover_image,
-              %}
-              
+          <!-- <div id="{{ wrapper_id }}" class="resp-img-wrapper js"> -->
+            <!-- <div style="padding-top:{{ 1 | divided_by: collection_image.aspect_ratio | times: 100}}%;"> -->
               <img id="{{ img_id }}"
-                   class="resp-img lazyload"
+                   class="resp-img lazyload custom-product-image"
                    src="{{ collection_image | img_url: '300x' }}"
                    data-src="{{ img_url }}"
                    data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
                    data-aspectratio="{{ collection_image.aspect_ratio }}"
                    data-sizes="auto"
                    alt="{{ collection_image.alt | escape }}">
-            </div>
-          </div>
+            <!-- </div> -->
+          <!-- </div> -->
           <noscript>
             <img src="{{ collection_image.src | img_url: 'large' }}" alt="{{ collection_image.alt | escape }}">
           </noscript>

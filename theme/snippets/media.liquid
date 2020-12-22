@@ -12,11 +12,12 @@
      tabindex="-1">
   {% case media.media_type %}
     {% when 'image' %}
-      <div class="product-single__media"
-            style="padding-top:{{ 1 | divided_by: media.aspect_ratio | times: 100}}%;">
+      <div class="custom-product-page__image">
         {% capture img_id_class %}ProductMedia-{{ media_id }}{% endcapture %}
         {% assign img_url = media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+        {% comment %}
         {% include 'image-style' with image: media, width: '2000', height: '2000', small_style: true, wrapper_id: media_wrapper_id, img_id_class: img_id_class %}
+        {% endcomment %}
         <img
           id="{{ media_id }}"
           class="resp-img lazyload {{ img_id_class }}"

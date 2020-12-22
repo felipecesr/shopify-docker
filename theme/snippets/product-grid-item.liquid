@@ -100,7 +100,7 @@
           {% endif %}
           <div style="padding-top:{{ 1 | divided_by: product.featured_media.preview_image.aspect_ratio | times: 100}}%;">
             <img id="{{ img_id }}"
-                 class="resp-img product__img lazyload"
+                 class="resp-img product__img lazyload custom-product-image"
                  data-src="{{ img_url }}"
                  data-widths="[180, 360, 470, 600, 750, 940, 1080, 1296, 1512, 1728, 2048]"
                  data-aspectratio="{{ product.featured_media.preview_image.aspect_ratio }}"
