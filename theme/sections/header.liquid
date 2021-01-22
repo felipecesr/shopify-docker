@@ -59,9 +59,7 @@
 <header class="site-header {{ extraClasses }} {{ border_class }}" role="banner"   data-section-type="header" data-section-id="{{ section.id }}" data-template="{{ template.name }}">
 
 
-  {% if hero_image_active and template == 'index' %}
   <div class="hero-image-header-wrap">
-  {% endif %}
 
     {% if section.settings.show_announcement %}
       {% if section.settings.home_page_only == false or template.name == 'index' %}
@@ -184,8 +182,8 @@
     </div><!-- end headerInnerWrap -->
   </div><!-- end wrapper -->
 
-  {% if hero_image_active and template == 'index' %}
   </div> <!-- end additional wrapper for header content -->
+  {% if hero_image_active and template == 'index' %}
     {% include 'header_hero-image' %}
   {% endif %}
 

@@ -8315,7 +8315,6 @@ section.collection-page {
 
 .hero-image-header-wrap {
   background-color: rgba(0, 0, 0, 0);
-  transition: background-color .2s ease-out;
 }
 
 .site-header {
@@ -8329,6 +8328,11 @@ section.collection-page {
 .hero-header-fixed {
   position: fixed !important;
   background-color: rgba(0, 0, 0, 1);
+  z-index: 2;
+}
+
+.template-index.hero-image-header-wrap {
+  transition: background-color .2s ease-out;
 }
 
 .btn--header {
